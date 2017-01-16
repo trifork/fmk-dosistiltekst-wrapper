@@ -1,5 +1,5 @@
 # fmk-dosistiltekst-wrapper
-fmk-dosistiltekst-wrapper udstiller et java API der indkapsler dosistiltekst javascript komponenten.
+fmk-dosistiltekst-wrapper udstiller et java API der indkapsler dosistiltekst javascript komponenten. P.t. understøttes Java 8.
 JS komponenten selv kan hentes vha. "npm i fmk-dosis-til-tekst-ts". Javascriptfilen dosistiltekst.js findes hefter i node_modules/fmk-dosis-til-tekst-ts/target folderen.
 
 Før brug skal DosisTilTekstWrapper klassen initialiseres med en java FileStream indeholdende dosistiltekst.js filen, eksempelvis:
