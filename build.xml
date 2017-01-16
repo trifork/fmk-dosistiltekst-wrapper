@@ -84,4 +84,6 @@
 		</junitreport>
 		<fail if="test.failed" message="There were test failures" />
 	</target>
+	
+	<target name="publish-internal" depends="init, resolve-build, local-revision,jar, war, publish-internal-do"/>
 </project>

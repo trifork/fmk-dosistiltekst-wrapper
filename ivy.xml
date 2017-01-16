@@ -1,5 +1,5 @@
 <ivy-module version="1.0">
-	<info module="dosis-til-text" organisation="trifork" status="integration" />
+	<info module="fmk-dosistiltekst-wrapper" organisation="trifork" status="integration" />
 
 	<configurations>
 		<conf name="deploy" />
