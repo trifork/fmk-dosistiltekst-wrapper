@@ -31,6 +31,11 @@
 		</copy>
 	</target>
 	
+	<target name="test-on-jenkins">
+		<property name="dosistiltekstJSlocation" value="../../fmk-dosis-til-tekst-ts/workspace/target/" />
+		<antcall target="test-do"/>
+	</target>
+	
 	<target name="test-do">
 		<condition property="cond.jmx.port" value="${jmx.port}" else="8005">
 			<isset property="jmx.port"/>
@@ -55,6 +60,7 @@
 			<jvmarg value="-Dcom.sun.management.jmxremote.authenticate=${cond.jmx.auth}"/>
       		<jvmarg value="-Djava.awt.headless=true"/>
         	<jvmarg value="-Dfile.encoding=UTF-8"/>
+        	<jvmarg value="-DdosistiltekstJSlocation=${dosistiltekstJSlocation}"/>
 			<formatter type="plain"/>
 			<formatter type="xml"/>
 			<batchtest fork="yes" todir="${artifactsDir}/test">
