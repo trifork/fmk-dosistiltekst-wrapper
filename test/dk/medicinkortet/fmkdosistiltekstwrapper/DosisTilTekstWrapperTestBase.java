@@ -11,6 +11,6 @@ public abstract class DosisTilTekstWrapperTestBase {
 
 	@Before
 	public void setUp() throws FileNotFoundException, ScriptException {
-		DosisTilTekstWrapper.initialize(new FileReader("node_modules/fmk-dosis-til-tekst-ts/target/dosistiltekst.js"));
+		DosisTilTekstWrapper.initialize(new FileReader("../fmk-dosis-til-tekst-ts/target/dosistiltekst.js"));
 	}
 }

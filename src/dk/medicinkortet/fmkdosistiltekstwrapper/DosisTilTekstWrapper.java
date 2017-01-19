@@ -29,12 +29,14 @@ public class DosisTilTekstWrapper {
 
 	public static void initialize(Reader javascriptFileReader) throws ScriptException {
 		
-		engine = new ScriptEngineManager().getEngineByName("nashorn");
-		Bindings bindings = new SimpleBindings();
-		bindings.put("console", new DosisTilTekstWrapper().new ConsoleObject());
-
-		engine.setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
-		engine.eval(javascriptFileReader);
+		if(engine == null) {
+			engine = new ScriptEngineManager().getEngineByName("nashorn");
+			Bindings bindings = new SimpleBindings();
+			bindings.put("console", new DosisTilTekstWrapper().new ConsoleObject());
+	
+			engine.setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
+			engine.eval(javascriptFileReader);
+		}
 	}
 	
 	public static String convertLongText(DosageWrapper dosage) {

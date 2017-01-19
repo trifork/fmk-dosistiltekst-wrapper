@@ -14,8 +14,6 @@
 
 	<property environment="env" />
 
-	<property name="test.instrument" value="true" />
-
 	<path id="sourcepath">
 		<pathelement location="src" />
 	</path>
@@ -32,18 +30,8 @@
 			</fileset>
 		</copy>
 	</target>
-
-	<target name="resolve-js">
-		<exec executable="cmd" osfamily="windows">
-			<arg value="/C" />
-			<arg value="npm.cmd install" />
-		</exec>
-		<exec executable="npm" osfamily="unix">
-			<arg value="install" />
-		</exec>
-	</target>
 	
-	<target name="test-do" depends="resolve-js">
+	<target name="test-do">
 		<condition property="cond.jmx.port" value="${jmx.port}" else="8005">
 			<isset property="jmx.port"/>
 		</condition>

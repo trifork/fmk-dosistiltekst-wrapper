@@ -28,3 +28,6 @@ String shortText = DosisTilTekstWrapper.convertShortText(dosage);
 DailyDosis daily = DosisTilTekstWrapper.calculateDailyDosis(dosage);
 DosageType dosageType = DosisTilTekstWrapper.getDosageType(dosage);
 ```
+
+## Kun til udviklere af selve fmk-dosistiltekst-wrapper komponenten:
+Forudsætter fmk-dosis-til-tekst-ts er checket ud og bygget "parallelt" med dette projekt, således at ../fmk-dosis-til-tekst-ts/target/dosistiltekst.js er tilgængelig.
