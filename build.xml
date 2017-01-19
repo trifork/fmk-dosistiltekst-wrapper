@@ -32,7 +32,7 @@
 	</target>
 	
 	<target name="test-on-jenkins">
-		<property name="dosistiltekstJSlocation" value="../../fmk-dosis-til-tekst-ts/workspace/target/" />
+		<property name="dosistiltekstJSlocation" value="../../fmk-dosis-til-tekst-ts/workspace/target/dosistiltekst.js" />
 		<antcall target="test-do"/>
 	</target>
 	
