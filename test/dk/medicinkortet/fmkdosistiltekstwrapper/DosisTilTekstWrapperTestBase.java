@@ -9,8 +9,17 @@ import org.junit.Before;
 
 public abstract class DosisTilTekstWrapperTestBase {
 
+	static boolean isInitialized = false;
+	
 	@Before
 	public void setUp() throws FileNotFoundException, ScriptException {
-		DosisTilTekstWrapper.initialize(new FileReader("../fmk-dosis-til-tekst-ts/target/dosistiltekst.js"));
+		if(!isInitialized) {
+			String jsLocation = System.getProperty("dosistiltekstJSlocation");
+			if(jsLocation == null) {
+				jsLocation = "../fmk-dosis-til-tekst-ts/target/dosistiltekst.js";	// For typical local developer use. Property value usually set on jenkins
+			}
+			DosisTilTekstWrapper.initialize(new FileReader(jsLocation));
+			isInitialized = true;
+		}
 	}
 }
