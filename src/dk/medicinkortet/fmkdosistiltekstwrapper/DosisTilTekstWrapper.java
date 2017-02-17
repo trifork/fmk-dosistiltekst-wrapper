@@ -4,20 +4,18 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 
-import javax.script.Bindings;
 import javax.script.Compilable;
 import javax.script.CompiledScript;
 import javax.script.Invocable;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import javax.script.SimpleBindings;
 
-import dk.medicinkortet.fmkdosistiltekstwrapper.JSONHelper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.DosageWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.Interval;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.UnitOrUnitsWrapper;
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
 public class DosisTilTekstWrapper {
@@ -41,9 +39,16 @@ public class DosisTilTekstWrapper {
 	
 	public static void initialize(Reader javascriptFileReader) throws ScriptException {
 		if(engine == null) {
-			engine = new ScriptEngineManager().getEngineByName("nashorn");
-			Compilable compilingEngine = (Compilable) engine;
 			
+			engine = new NashornScriptEngineFactory().getScriptEngine(new String[] {"-ot=false"/*"–-optimistic-types=true --print-code"*/});
+			// engine = new ScriptEngineManager().getEngineByName("nashorn");
+			Compilable compilingEngine = (Compilable) engine;
+
+			/*
+			Bindings bindings = new SimpleBindings();
+			bindings.put("console", new DosisTilTekstWrapper().new ConsoleObject());
+			engine.setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
+			*/
 			script = compilingEngine.compile(javascriptFileReader);
 			script.eval();
 			
@@ -54,30 +59,29 @@ public class DosisTilTekstWrapper {
 			dosageTypeCalculator144Obj = engine.eval("dosistiltekst.DosageTypeCalculator144");
 			dailyDosisCalculatorObj = engine.eval("dosistiltekst.DailyDosisCalculator");
 			invocable = (Invocable) engine;
-
-			Bindings bindings = new SimpleBindings();
-			bindings.put("console", new DosisTilTekstWrapper().new ConsoleObject());
-			engine.setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
 		}
 	}
 	
 	public static DosageTranslationCombined convertCombined(DosageWrapper dosage) {
-		String json = JSONHelper.toJsonString(dosage);
 		
 		if(engine == null) {
 			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
 		}
 				
+		String json = "(unset)";
 		ScriptObjectMirror res;
 		try {
-			
+			json = JSONHelper.toJsonString(dosage);
 	        res = (ScriptObjectMirror) invocable.invokeMethod(combinedTextConverterObj, "convertStr", json);
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new RuntimeException("ScriptException in LongTextConverter.convert() with json " + json, e);
+			throw new RuntimeException("ScriptException in DosisTilTekstWrapper.convertCombined() with json " + json, e);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
-			throw new RuntimeException("NoSuchMethodException in LongTextConverter.convert() with json " + json, e);
+			throw new RuntimeException("NoSuchMethodException in DosisTilTekstWrapper.convertCombined() with json " + json, e);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("JsonProcessingException inDosisTilTekstWrapper.convertCombined() with json " + json, e);
 		}
 		
 		String combinedShortText = (String)res.get("combinedShortText");
@@ -91,118 +95,137 @@ public class DosisTilTekstWrapper {
 		}
 		return new DosageTranslationCombined(new DosageTranslation(combinedShortText, combinedLongText, combinedDD), translations);
 	}
-		
+	
 	public static String convertLongText(DosageWrapper dosage) {
-		String json = JSONHelper.toJsonString(dosage);
 		
 		if(engine == null) {
 			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
 		}
 		
+		String json = "(unset)";
 		Object res;
 		try {
+			json = JSONHelper.toJsonString(dosage);
 	        res = invocable.invokeMethod(longTextConverterObj, "convertStr", json);
 
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new RuntimeException("ScriptException in LongTextConverter.convert() with json " + json, e);
+			throw new RuntimeException("ScriptException in DosisTilTekstWrapper.convertLongText() with json " + json, e);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
-			throw new RuntimeException("NoSuchMethodException in LongTextConverter.convert() with json " + json, e);
+			throw new RuntimeException("NoSuchMethodException in DosisTilTekstWrapper.convertLongText() with json " + json, e);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("JsonProcessingException in DosisTilTekstWrapper.convertLongText() with json " + json, e);
 		}
 		
 		return (String)res;
 	}
 	
 	public static String convertShortText(DosageWrapper dosage) {
-		String json = JSONHelper.toJsonString(dosage);
 		
 		if(engine == null) {
 			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
 		}
 			
 		Object res;
+		String json = "(unset)";
 		try {
+			json = JSONHelper.toJsonString(dosage);
 	        res = invocable.invokeMethod(shortTextConverterObj, "convertStr", json);
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new RuntimeException("ScriptException in ShortTextConverter.convert() with json " + json, e);
+			throw new RuntimeException("ScriptException in DosisTilTekstWrapper.convertShortText() with json " + json, e);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
-			throw new RuntimeException("NoSuchMethodException in ShortTextConverter.convert() with json " + json, e);
+			throw new RuntimeException("NoSuchMethodException in DosisTilTekstWrapper.convertShortText() with json " + json, e);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("JsonProcessingException in DosisTilTekstWrapper.convertShortText() with json " + json, e);
 		}
 		
 		return (String)res;
 	}
 	
 	public static String convertShortText(DosageWrapper dosage, int maxLength) {
-		String json = JSONHelper.toJsonString(dosage);
 	
 		if(engine == null) {
 			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
 		}
 		
-		
+		String json = "(unset)";
 		Object res;
 		try {
+			json = JSONHelper.toJsonString(dosage);
 	        res = invocable.invokeMethod(shortTextConverterObj, "convertStr", json, maxLength);
 
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new RuntimeException("ScriptException in ShortTextConverter.convert() with json " + json, e);
+			throw new RuntimeException("ScriptException in DosisTilTekstWrapper.convertShortText() with json " + json, e);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
-			throw new RuntimeException("NoSuchMethodException in ShortTextConverter.convert() with json " + json, e);
+			throw new RuntimeException("NoSuchMethodException in DosisTilTekstWrapper.convertShortText() with json " + json, e);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("JsonProcessingException in DosisTilTekstWrapper.convertShortText() with json " + json, e);
 		}
 		
 		return (String)res;
 	}
 	
 	public static String getShortTextConverterClassName(DosageWrapper dosage) {
-		String json = JSONHelper.toJsonString(dosage);
 		
 		if(engine == null) {
 			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
 		}
 		
+		String json = "(unset)";
 		Object res;
 		try {
+			json = JSONHelper.toJsonString(dosage);
 			res = engine.eval("dosistiltekst.Factory.getShortTextConverter().getConverterClassName(" + json + ")");
 		} catch (ScriptException e) {
 			e.printStackTrace();
 			throw new RuntimeException("ScriptException in getShortTextConverterClassName()", e);
-		}
-		
-		return (String)res;
-	}
-
-	public static String getLongTextConverterClassName(DosageWrapper dosage) {
-		String json = JSONHelper.toJsonString(dosage);
-		
-		if(engine == null) {
-			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
-		}
-		
-		Object res;
-		try {
-			res = engine.eval("dosistiltekst.Factory.getLongTextConverter().getConverterClassName(" + json + ")");
-		} catch (ScriptException e) {
+		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-			throw new RuntimeException("ScriptException in getLongTextConverterClassName()", e);
+			throw new RuntimeException("JsonProcessingException in DosisTilTekstWrapper.getShortTextConverterClassName() with json " + json, e);
 		}
 		
 		return (String)res;
 	}
 	
-	public static DosageType getDosageType(DosageWrapper dosage) {
-		String json = JSONHelper.toJsonString(dosage);
-		
+	public static String getLongTextConverterClassName(DosageWrapper dosage) {
 		if(engine == null) {
 			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
 		}
 		
+		String json = "(unset)";
 		Object res;
 		try {
+			json = JSONHelper.toJsonString(dosage);
+			res = engine.eval("dosistiltekst.Factory.getLongTextConverter().getConverterClassName(" + json + ")");
+		} catch (ScriptException e) {
+			e.printStackTrace();
+			throw new RuntimeException("ScriptException in getLongTextConverterClassName()", e);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("JsonProcessingException in DosisTilTekstWrapper.getLongTextConverterClassName() with json " + json, e);
+		}
+		
+		return (String)res;
+	}
+		
+	public static DosageType getDosageType(DosageWrapper dosage) {
+				
+		if(engine == null) {
+			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
+		}
+		
+		String json = "(unset)";
+		Object res;
+		try {
+			json = JSONHelper.toJsonString(dosage);
 	        res = invocable.invokeMethod(dosageTypeCalculatorObj, "calculateStr", json);
 		} catch (ScriptException e) {
 			e.printStackTrace();
@@ -210,20 +233,24 @@ public class DosisTilTekstWrapper {
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 			throw new RuntimeException("NoSuchMethodException in getDosageType()", e);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("JsonProcessingException in DosisTilTekstWrapper.getDosageType() with json " + json, e);
 		}
 		
 		return DosageType.fromInteger((Integer)res);
 	}
 	
 	public static DosageType getDosageType144(DosageWrapper dosage) {
-		String json = JSONHelper.toJsonString(dosage);
 		
 		if(engine == null) {
 			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
 		}
 		
+		String json = "(unset)";
 		Object res;
 		try {
+			json = JSONHelper.toJsonString(dosage);
 	        res = invocable.invokeMethod(dosageTypeCalculator144Obj, "calculateStr", json);
 		} catch (ScriptException e) {
 			e.printStackTrace();
@@ -231,33 +258,40 @@ public class DosisTilTekstWrapper {
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 			throw new RuntimeException("NoSuchMethodException in getDosageType()", e);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("JsonProcessingException in DosisTilTekstWrapper.getDosageType144() with json " + json, e);
 		}
 		
 		return DosageType.fromInteger((Integer)res);
 	}
 	
 	public static DailyDosis calculateDailyDosis(DosageWrapper dosage) {
-		String json = JSONHelper.toJsonString(dosage);
 		
 		if(engine == null) {
 			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
 		}
 		
 		ScriptObjectMirror res;
-
+		String json = "(unset)";
+		
 		try {
+			json = JSONHelper.toJsonString(dosage);
 	        res = (ScriptObjectMirror)invocable.invokeMethod(dailyDosisCalculatorObj, "calculateStr", json);
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new RuntimeException("ScriptException in getDosageType()", e);
+			throw new RuntimeException("ScriptException in calculateDailyDosis()", e);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
-			throw new RuntimeException("NoSuchMethodException in getDosageType()", e);
+			throw new RuntimeException("NoSuchMethodException in calculateDailyDosis()", e);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("JsonProcessingException in DosisTilTekstWrapper.calculateDailyDosis() with json " + json, e);
 		}
 		
 		return getDailyDosisFromJS(res);
 	}
-
+	
 	private static DailyDosis getDailyDosisFromJS(ScriptObjectMirror res) {
 		ScriptObjectMirror unitObject = (ScriptObjectMirror)res.get("unitOrUnits");
 		if(unitObject == null) {
@@ -272,7 +306,15 @@ public class DosisTilTekstWrapper {
 		}
 		Object value = res.get("value");
 		if(value != null) {
-			return new DailyDosis(BigDecimal.valueOf((double)value), unitWrapper);
+			if(value instanceof Integer) {
+				return new DailyDosis(BigDecimal.valueOf((Integer)value), unitWrapper);
+			}
+			else if(value instanceof Double) {
+				return new DailyDosis(BigDecimal.valueOf((double)value), unitWrapper);
+			}
+			else {
+				throw new RuntimeException("Unexpected type of dailydosis value: " + value);
+			}
 		}
 		else {
 			ScriptObjectMirror interval = (ScriptObjectMirror)res.get("interval");

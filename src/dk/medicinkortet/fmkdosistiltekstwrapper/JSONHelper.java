@@ -1,23 +1,16 @@
 package dk.medicinkortet.fmkdosistiltekstwrapper;
 
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.DateOrDateTimeWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.DoseWrapper;
@@ -29,122 +22,123 @@ import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.PlainDoseWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.TimedDoseWrapper;
 
 class JSONHelper {
+	static ObjectMapper mapper = null;
 	
-	public static void write(Object o, File file) throws IOException {
-		BufferedWriter writer = null;
-		try {
-			writer = new BufferedWriter(new FileWriter(file));
-			getGson().toJson(o, new IndentingWriter(writer));
-			System.out.println("JsonHelper.write: Created file "+file.getAbsolutePath());
-		}
-		finally {
-			try {
-				writer.close();
-			}
-			catch(Exception e) {
-				// ignored 
-			}
-		}
-	}	
-		
-	public static <T> T read(File file, Class<T> klass) throws IOException {
-		BufferedReader r = null;
-		if(!file.exists())
-			throw new IOException("No file "+file.getAbsolutePath());
-		try {
-			r = new BufferedReader(new FileReader(file));
-			return getGson().fromJson(r, klass);
-		}
-		finally {
-			try {
-				r.close();
-			}
-			catch(Exception e) {
-				// ignore //
-			}
-		}
-	}
-	
-	public static Gson getGson() {
-		GsonBuilder b = new GsonBuilder();
-		b.disableHtmlEscaping();
-		b.registerTypeAdapter(Date.class, new JsonSerializer<Date>() {
-			@Override
-			public JsonElement serialize(Date date, Type type, JsonSerializationContext context) {
-				return new JsonPrimitive(new SimpleDateFormat("yyyy-MM-dd").format(date));
-			}
-		});
-		b.registerTypeAdapter(java.sql.Date.class, new JsonSerializer<java.sql.Date>() {
-			@Override
-			public JsonElement serialize(java.sql.Date date, Type type, JsonSerializationContext context) {
-				return new JsonPrimitive(new SimpleDateFormat("yyyy-MM-dd").format(date));
-			}
-		});		
-		
-		b.registerTypeAdapter(DateOrDateTimeWrapper.class, new JsonSerializer<DateOrDateTimeWrapper>() {
-			@Override
-			public JsonElement serialize(DateOrDateTimeWrapper dateOrDateTime, Type type, JsonSerializationContext context) {
-				JsonObject dateOrDateTimeObject = new JsonObject();
-				
-				if(dateOrDateTime.getDate() != null) {
-					dateOrDateTimeObject.addProperty("date", new SimpleDateFormat("yyyy-MM-dd").format(dateOrDateTime.getDate())); // "startDateOrDateTime":{"date":"2014-02-07"}
-				}
-				else {
-					dateOrDateTimeObject.addProperty("dateTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dateOrDateTime.getDateTime())); // "startDateOrDateTime":{"dateTime":"2014-02-07"}
-				}
-				
-				return dateOrDateTimeObject;
-			}
-		});
+	public static class DateOrDateTimeWrapperSerializer extends StdSerializer<DateOrDateTimeWrapper> {
 
-		// Since the default json serialization of Morning/Noon/Evening/NIght dose wrappers dosesn't include their type, we need to add it during serialization
-		b.registerTypeAdapter(DoseWrapper.class, new JsonSerializer<DoseWrapper>() {
-			@Override
-			public JsonElement serialize(DoseWrapper dose, Type type, JsonSerializationContext context) {
-				JsonObject json = (JsonObject)context.serialize(dose, dose.getClass());
-				if(dose instanceof MorningDoseWrapper) {
-					json.addProperty("type", "MorningDoseWrapper");
-				}
-				else if(dose instanceof NoonDoseWrapper) {
-					json.addProperty("type", "NoonDoseWrapper");
-				}
-				else if(dose instanceof EveningDoseWrapper) {
-					json.addProperty("type", "EveningDoseWrapper");
-				}
-				else if(dose instanceof NightDoseWrapper) {
-					json.addProperty("type", "NightDoseWrapper");
-				}
-				else if(dose instanceof PlainDoseWrapper) {
-					json.addProperty("type", "PlainDoseWrapper");
-				}
-				else if(dose instanceof TimedDoseWrapper) {
-					json.addProperty("type", "TimedDoseWrapper");
-				}
-				return json;
+		public DateOrDateTimeWrapperSerializer() {
+	        this(null);
+	    }
+	   
+	    public DateOrDateTimeWrapperSerializer(Class<DateOrDateTimeWrapper> t) {
+	        super(t);
+	    }
+
+		@Override
+		public void serialize(DateOrDateTimeWrapper dateOrDateTime, JsonGenerator jgen, SerializerProvider provider)
+				throws IOException {
+			jgen.writeStartObject();
+			
+			if(dateOrDateTime.getDate() != null) {
+				jgen.writeStringField("date", new SimpleDateFormat("yyyy-MM-dd").format(dateOrDateTime.getDate())); // "startDateOrDateTime":{"date":"2014-02-07"}
 			}
-		});
-		
-		return b.create();
-	}
-	
-	public static String toJsonString(Object object) {		
-		return getGson().toJson(object);	
-	}
-	
-	public static void toJsonFile(Object object, File file) throws IOException {
-		BufferedWriter w = null;		
-		try {
-			w = new BufferedWriter(new FileWriter(file));		
-			getGson().toJson(object, w);
-		}
-		finally {
-			try {
-				w.close();
+			else {
+				jgen.writeStringField("dateTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dateOrDateTime.getDateTime())); // "startDateOrDateTime":{"dateTime":"2014-02-07"}
 			}
-			catch(IOException e) {
-				/* ignored */
-			}
+			
+			jgen.writeEndObject();
 		}
 	}
 
+	public static class DoseWrapperSerializer extends StdSerializer<DoseWrapper> {
+		  
+
+		public DoseWrapperSerializer() {
+	        this(null);
+	    }
+	   
+	    public DoseWrapperSerializer(Class<DoseWrapper> t) {
+	        super(t);
+	    }
+
+		@Override
+		public void serialize(DoseWrapper dose, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+			
+			jgen.writeStartObject();
+			
+			if(dose.getDoseQuantity() != null) {
+				jgen.writeObjectField("doseQuantity", dose.getDoseQuantity());
+			}
+			
+			if(dose.getMinimalDoseQuantity() != null) {
+				jgen.writeObjectField("minimalDoseQuantity", dose.getMinimalDoseQuantity());
+			}
+			
+			if(dose.getMaximalDoseQuantity() != null) {
+				jgen.writeObjectField("maximalDoseQuantity", dose.getMaximalDoseQuantity());
+			}
+			
+			if(dose.getDoseQuantityString() != null) {
+				jgen.writeStringField("doseQuantityString", dose.getDoseQuantityString());
+			}
+			
+			if(dose.getMinimalDoseQuantityString() != null) {
+				jgen.writeStringField("minimalDoseQuantityString", dose.getMinimalDoseQuantityString());
+			}
+			
+			if(dose.getMaximalDoseQuantityString() != null) {
+				jgen.writeStringField("maximalDoseQuantityString", dose.getMaximalDoseQuantityString());
+			}
+			
+			jgen.writeBooleanField("isAccordingToNeed", dose.isAccordingToNeed());
+			
+			if(dose instanceof MorningDoseWrapper) {
+				jgen.writeStringField("type", "MorningDoseWrapper");
+			}
+			else if(dose instanceof NoonDoseWrapper) {
+				jgen.writeStringField("type", "NoonDoseWrapper");
+			}
+			else if(dose instanceof EveningDoseWrapper) {
+				jgen.writeStringField("type", "EveningDoseWrapper");
+			}
+			else if(dose instanceof NightDoseWrapper) {
+				jgen.writeStringField("type", "NightDoseWrapper");
+			}
+			else if(dose instanceof PlainDoseWrapper) {
+				jgen.writeStringField("type", "PlainDoseWrapper");
+			}
+			else if(dose instanceof TimedDoseWrapper) {
+				TimedDoseWrapper timedDose = (TimedDoseWrapper)dose;
+				jgen.writeStringField("type", "TimedDoseWrapper");
+				jgen.writeObjectFieldStart("time");
+				jgen.writeNumberField("hour", timedDose.getTime().getHour());
+				jgen.writeNumberField("minute", timedDose.getTime().getMinute());
+				if(timedDose.getTime().getSecond() != null) {
+					jgen.writeNumberField("second", timedDose.getTime().getSecond());
+				}
+				jgen.writeEndObject();
+			}
+			
+			jgen.writeEndObject();
+		}
+	}
+	
+	private static ObjectMapper getObjectMapper() {
+		if(mapper == null) {
+			mapper = new ObjectMapper();
+			
+			SimpleModule module = new SimpleModule();
+			module.addSerializer(DateOrDateTimeWrapper.class, new JSONHelper.DateOrDateTimeWrapperSerializer());
+			module.addSerializer(DoseWrapper.class, new JSONHelper.DoseWrapperSerializer());
+			mapper.registerModule(module);
+			mapper.setSerializationInclusion(Include.NON_NULL);
+		}
+		
+		return mapper;
+	}
+	
+	public static String toJsonString(Object object) throws JsonProcessingException {		
+		
+		return getObjectMapper().writeValueAsString(object);
+	}
 }

@@ -57,7 +57,19 @@ public class LocalTime {
         this.second = second;
     }
 
-    public boolean hasSeconds() {
+    public int getHour() {
+		return hour;
+	}
+
+	public int getMinute() {
+		return minute;
+	}
+
+	public Integer getSecond() {
+		return second;
+	}
+
+	public boolean hasSeconds() {
         return second != null;
     }
 

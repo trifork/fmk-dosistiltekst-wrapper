@@ -69,17 +69,21 @@ public class TimedDoseWrapper extends DoseWrapper {
 		return LABEL+" "+time.toString();
 	}
 
-	public String getTime() {
+	public String getTimeString() {
 		return time.toString();
 	}
 	
+	public LocalTime getTime() {
+		return time;
+	}
+
 	@Override
 	public boolean theSameAs(DoseWrapper other) {
 		if(!(other instanceof TimedDoseWrapper))
 			return false;
 		if(!super.theSameAs(other))
 			return false;
-		return getTime().equals(((TimedDoseWrapper)other).getTime());
+		return getTimeString().equals(((TimedDoseWrapper)other).getTimeString());
 	}
 
 }

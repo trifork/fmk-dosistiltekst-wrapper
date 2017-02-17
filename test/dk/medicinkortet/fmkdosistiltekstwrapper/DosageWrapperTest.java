@@ -31,6 +31,7 @@ import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.DateOrDateTimeWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.DayWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.DosageWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.EveningDoseWrapper;
+import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.FreeTextWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.MorningDoseWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.NightDoseWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.NoonDoseWrapper;
@@ -53,6 +54,10 @@ public class DosageWrapperTest extends DosisTilTekstWrapperTestBase {
 						DayWrapper.makeDay(1,
 							PlainDoseWrapper.makeDose(new BigDecimal(4)), 
 							PlainDoseWrapper.makeDose(new BigDecimal(4))))));
+		
+		String shortText = DosisTilTekstWrapper.convertShortText(dosage);
+		Assert.assertEquals("4 stk 2 gange daglig mod smerter", shortText);
+		
 		Assert.assertEquals(
 			"Doseringsforløbet starter lørdag den 1. januar 2011 og gentages hver dag:\n"+
 			"   Doseringsforløb:\n"+
@@ -129,5 +134,37 @@ public class DosageWrapperTest extends DosisTilTekstWrapperTestBase {
 			DosisTilTekstWrapper.convertLongText(dosage));
 	}
 	
+	@Test
+	public void testMaxQuantityFullCiphers() throws Exception {
+		  
+		BigDecimal minimalQuantity = new BigDecimal("0.000000001");
+		BigDecimal maximalQuantity = new BigDecimal("999999999.9999999");
+		DosageWrapper dosage = 
+			DosageWrapper.makeDosage(
+				StructuresWrapper.makeStructures(
+					UnitOrUnitsWrapper.makeUnit("stk"), 
+					StructureWrapper.makeStructure(
+					1, "mod smerter",
+					DateOrDateTimeWrapper.makeDate("2011-01-01"),DateOrDateTimeWrapper.makeDate("2011-01-14"), 
+					DayWrapper.makeDay(1,
+						MorningDoseWrapper.makeDose(minimalQuantity, maximalQuantity)))));
+		
+		DailyDosis dd = DosisTilTekstWrapper.calculateDailyDosis(dosage);
+		Assert.assertEquals(0, minimalQuantity.compareTo(dd.getInterval().getMinimum()));
+		Assert.assertEquals(0, maximalQuantity.compareTo(dd.getInterval().getMaximum()));
+	}
 	
+	@Test
+	public void testCombinedWithFreeText() throws Exception {
+		DosageWrapper dosage = 
+			DosageWrapper.makeDosage(FreeTextWrapper.makeFreeText(DateOrDateTimeWrapper.makeDate("2011-01-01"), null, "Bare tag rigeligt"));
+		
+		DosageTranslationCombined combined = DosisTilTekstWrapper.convertCombined(dosage);
+		Assert.assertEquals("Bare tag rigeligt", combined.getCombinedTranslation().getShortText());
+		Assert.assertEquals(
+				"Doseringsforløbet starter lørdag den 1. januar 2011.\n"+
+				"   Doseringsforløb:\n"+
+				"   Bare tag rigeligt", combined.getCombinedTranslation().getLongText());
+	}
 }
+
