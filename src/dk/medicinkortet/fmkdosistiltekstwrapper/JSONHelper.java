@@ -40,10 +40,10 @@ class JSONHelper {
 			jgen.writeStartObject();
 			
 			if(dateOrDateTime.getDate() != null) {
-				jgen.writeStringField("date", new SimpleDateFormat("yyyy-MM-dd").format(dateOrDateTime.getDate())); // "startDateOrDateTime":{"date":"2014-02-07"}
+				jgen.writeNumberField("date", dateOrDateTime.getDate().getTime()); //new SimpleDateFormat("yyyy-MM-dd").format(dateOrDateTime.getDate())); // "startDateOrDateTime":{"date":"2014-02-07"}
 			}
 			else {
-				jgen.writeStringField("dateTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dateOrDateTime.getDateTime())); // "startDateOrDateTime":{"dateTime":"2014-02-07"}
+				jgen.writeNumberField("dateTime", dateOrDateTime.getDateTime().getTime()); //new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dateOrDateTime.getDateTime())); // "startDateOrDateTime":{"dateTime":"2014-02-07"}
 			}
 			
 			jgen.writeEndObject();
