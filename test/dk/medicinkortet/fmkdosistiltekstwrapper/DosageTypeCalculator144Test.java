@@ -24,7 +24,7 @@ public class DosageTypeCalculator144Test extends DosisTilTekstWrapperTestBase {
 						UnitOrUnitsWrapper.makeUnit("stk"),
 						StructureWrapper.makeStructure(
 							1, "mod smerter", 
-							DateOrDateTimeWrapper.makeDate("2011-01-01"), DateOrDateTimeWrapper.makeDate("2011-02-01"),
+							DateOrDateTimeWrapper.makeDate("2017-01-01"), DateOrDateTimeWrapper.makeDate("2017-02-01"),
 							DayWrapper.makeDay(1,
 								PlainDoseWrapper.makeDose(new BigDecimal(4)), 
 								PlainDoseWrapper.makeDose(new BigDecimal(4))))
@@ -41,7 +41,7 @@ public class DosageTypeCalculator144Test extends DosisTilTekstWrapperTestBase {
 						UnitOrUnitsWrapper.makeUnit("stk"),
 						StructureWrapper.makeStructure(
 							1, "mod smerter", 
-							DateOrDateTimeWrapper.makeDate("2011-01-01"), DateOrDateTimeWrapper.makeDate("2011-02-01"),
+							DateOrDateTimeWrapper.makeDate("2017-01-01"), DateOrDateTimeWrapper.makeDate("2017-02-01"),
 							DayWrapper.makeDay(1,
 								PlainDoseWrapper.makeDose(new BigDecimal(4)), 
 								PlainDoseWrapper.makeDose(new BigDecimal(4), true)))
@@ -51,14 +51,14 @@ public class DosageTypeCalculator144Test extends DosisTilTekstWrapperTestBase {
 	}
 	
 	@Test
-	public void testFixed() {
+	public void testFixedOnlyReturnsFixed() {
 		DosageWrapper dosage = 
 				DosageWrapper.makeDosage(
 					StructuresWrapper.makeStructures(
 						UnitOrUnitsWrapper.makeUnit("stk"),
 						StructureWrapper.makeStructure(
 							1, "mod smerter", 
-							DateOrDateTimeWrapper.makeDate("2011-01-01"), DateOrDateTimeWrapper.makeDate("2011-02-01"),
+							DateOrDateTimeWrapper.makeDate("2017-01-01"), DateOrDateTimeWrapper.makeDate("2017-02-01"),
 							DayWrapper.makeDay(1,
 								PlainDoseWrapper.makeDose(new BigDecimal(4)), 
 								PlainDoseWrapper.makeDose(new BigDecimal(4))))
@@ -69,20 +69,20 @@ public class DosageTypeCalculator144Test extends DosisTilTekstWrapperTestBase {
 	
 	
 	@Test
-	public void testMultipleStructuresAllFixed() {
+	public void testMultipleStructuresAllFixedReturnsFixed() {
 		DosageWrapper dosage = 
 				DosageWrapper.makeDosage(
 					StructuresWrapper.makeStructures(
 						UnitOrUnitsWrapper.makeUnit("stk"),
 						StructureWrapper.makeStructure(
 							1, "mod smerter", 
-							DateOrDateTimeWrapper.makeDate("2011-01-01"), null,
+							DateOrDateTimeWrapper.makeDate("2017-01-01"), DateOrDateTimeWrapper.makeDate("2017-01-03"),
 							DayWrapper.makeDay(1,
 								PlainDoseWrapper.makeDose(new BigDecimal(4)), 
 								PlainDoseWrapper.makeDose(new BigDecimal(4)))),
 						StructureWrapper.makeStructure(
 							1, "mod smerter", 
-							DateOrDateTimeWrapper.makeDate("2011-01-01"), null,
+							DateOrDateTimeWrapper.makeDate("2017-01-04"), null,
 							DayWrapper.makeDay(1,
 								PlainDoseWrapper.makeDose(new BigDecimal(4)), 
 								PlainDoseWrapper.makeDose(new BigDecimal(4))))
@@ -93,20 +93,20 @@ public class DosageTypeCalculator144Test extends DosisTilTekstWrapperTestBase {
 	}
 	
 	@Test
-	public void testMultipleStructuresAllPN() {
+	public void testMultipleStructuresAllPNReturnsPN() {
 		DosageWrapper dosage = 
 				DosageWrapper.makeDosage(
 					StructuresWrapper.makeStructures(
 						UnitOrUnitsWrapper.makeUnit("stk"),
 						StructureWrapper.makeStructure(
 							1, "mod smerter", 
-							DateOrDateTimeWrapper.makeDate("2011-01-01"), null,
+							DateOrDateTimeWrapper.makeDate("2017-01-01"), DateOrDateTimeWrapper.makeDate("2017-01-03"),
 							DayWrapper.makeDay(1,
 								PlainDoseWrapper.makeDose(new BigDecimal(4), true), 
 								PlainDoseWrapper.makeDose(new BigDecimal(4), true))),
 						StructureWrapper.makeStructure(
 							1, "mod smerter", 
-							DateOrDateTimeWrapper.makeDate("2011-01-01"), null,
+							DateOrDateTimeWrapper.makeDate("2017-01-04"), null,
 							DayWrapper.makeDay(1,
 								PlainDoseWrapper.makeDose(new BigDecimal(4), true), 
 								PlainDoseWrapper.makeDose(new BigDecimal(4), true)))
@@ -117,26 +117,152 @@ public class DosageTypeCalculator144Test extends DosisTilTekstWrapperTestBase {
 	}
 	
 	@Test
-	public void testMultipleStructuresCombined() {
+	public void testMultipleStructuresInternallyCombinedReturnsCombined() {
 		DosageWrapper dosage = 
-				DosageWrapper.makeDosage(
-					StructuresWrapper.makeStructures(
-						UnitOrUnitsWrapper.makeUnit("stk"),
-						StructureWrapper.makeStructure(
-							1, "mod smerter", 
-							DateOrDateTimeWrapper.makeDate("2011-01-01"), null,
-							DayWrapper.makeDay(1,
-								PlainDoseWrapper.makeDose(new BigDecimal(4)), 
-								PlainDoseWrapper.makeDose(new BigDecimal(4), true))),
-						StructureWrapper.makeStructure(
-							1, "mod smerter", 
-							DateOrDateTimeWrapper.makeDate("2011-01-01"), null,
-							DayWrapper.makeDay(1,
-								PlainDoseWrapper.makeDose(new BigDecimal(4), true), 
-								PlainDoseWrapper.makeDose(new BigDecimal(4))))
-					));
+			DosageWrapper.makeDosage(
+				StructuresWrapper.makeStructures(
+					UnitOrUnitsWrapper.makeUnit("stk"),
+					StructureWrapper.makeStructure(
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-01-01"), null,
+						DayWrapper.makeDay(1,
+							PlainDoseWrapper.makeDose(new BigDecimal(4)), 
+							PlainDoseWrapper.makeDose(new BigDecimal(4), true))),
+					StructureWrapper.makeStructure(
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-01-01"), null,
+						DayWrapper.makeDay(1,
+							PlainDoseWrapper.makeDose(new BigDecimal(4), true), 
+							PlainDoseWrapper.makeDose(new BigDecimal(4))))
+				));
 		
 		Assert.assertEquals(DosageType.Combined, DosisTilTekstWrapper.getDosageType144(dosage));
 		
 	}
+	
+	@Test
+	public void testNotOverlappingFixedAndEmptyReturnsFixed() {
+		DosageWrapper dosage = 
+			DosageWrapper.makeDosage(
+				StructuresWrapper.makeStructures(
+					UnitOrUnitsWrapper.makeUnit("stk"),
+					StructureWrapper.makeStructure(
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-02-01"), DateOrDateTimeWrapper.makeDate("2017-02-02"),
+						DayWrapper.makeDay(1,
+							PlainDoseWrapper.makeDose(new BigDecimal(4)), 
+							PlainDoseWrapper.makeDose(new BigDecimal(4), false))),
+					StructureWrapper.makeStructure(
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-02-03"), DateOrDateTimeWrapper.makeDate("2017-02-04"))
+				));
+
+		Assert.assertEquals(DosageType.Fixed, DosisTilTekstWrapper.getDosageType144(dosage));
+	}
+
+
+	@Test
+	public void testOverlappingFixedAndEmptyReturnsCombined() {
+		DosageWrapper dosage = 
+			DosageWrapper.makeDosage(
+				StructuresWrapper.makeStructures(
+					UnitOrUnitsWrapper.makeUnit("stk"),
+					StructureWrapper.makeStructure(
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-02-01"), DateOrDateTimeWrapper.makeDate("2017-02-02"),
+						DayWrapper.makeDay(1,
+							PlainDoseWrapper.makeDose(new BigDecimal(4)), 
+							PlainDoseWrapper.makeDose(new BigDecimal(4), false))),
+					StructureWrapper.makeStructure(
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-02-01"), DateOrDateTimeWrapper.makeDate("2017-02-02"))
+				));
+		
+		Assert.assertEquals(DosageType.Combined, DosisTilTekstWrapper.getDosageType144(dosage));
+	}
+
+	@Test
+	public void testOverlappingFixedWithoutEnddateAndEmptyWithoutEnddateReturnsCombined() {
+		DosageWrapper dosage = 
+			DosageWrapper.makeDosage(
+				StructuresWrapper.makeStructures(
+					UnitOrUnitsWrapper.makeUnit("stk"),
+					StructureWrapper.makeStructure(	
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-01-01"), null,
+						DayWrapper.makeDay(1,
+							PlainDoseWrapper.makeDose(new BigDecimal(4)), 
+							PlainDoseWrapper.makeDose(new BigDecimal(4), false))),
+					StructureWrapper.makeStructure(
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-01-01"), null)
+				));
+		
+		Assert.assertEquals(DosageType.Combined, DosisTilTekstWrapper.getDosageType144(dosage));
+	}
+
+	
+	
+	@Test
+	public void testNotOverlappingPNAndEmptyReturnsPN() {
+		DosageWrapper dosage = 
+			DosageWrapper.makeDosage(
+				StructuresWrapper.makeStructures(
+					UnitOrUnitsWrapper.makeUnit("stk"),
+					StructureWrapper.makeStructure(
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-02-01"), DateOrDateTimeWrapper.makeDate("2017-02-02"),
+						DayWrapper.makeDay(1,
+							PlainDoseWrapper.makeDose(new BigDecimal(4), true))),
+					StructureWrapper.makeStructure(
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-02-03"), DateOrDateTimeWrapper.makeDate("2017-02-04"))
+				));
+	
+		Assert.assertEquals(DosageType.AccordingToNeed, DosisTilTekstWrapper.getDosageType144(dosage));
+	}
+
+	@Test
+	public void testOverlappingPNAndEmptyReturnsCombined() {
+		DosageWrapper dosage = 
+			DosageWrapper.makeDosage(
+				StructuresWrapper.makeStructures(
+					UnitOrUnitsWrapper.makeUnit("stk"),
+					StructureWrapper.makeStructure(
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-01-01"), null,
+						DayWrapper.makeDay(1,
+							PlainDoseWrapper.makeDose(new BigDecimal(4), true))),
+					StructureWrapper.makeStructure(
+						1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-01-01"), null)
+				));
+		
+		Assert.assertEquals(DosageType.Combined, DosisTilTekstWrapper.getDosageType144(dosage));
+	}
+	
+	// FMK-3247 Forkerte doseringstyper ved tomme doseringsperioder
+	@Test
+	public void testWithSeveralEmptyPeriodsReturnsCombined() {
+		DosageWrapper dosage = 
+			DosageWrapper.makeDosage(
+				StructuresWrapper.makeStructures(
+					UnitOrUnitsWrapper.makeUnit("stk"),
+					StructureWrapper.makeStructure(1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-01-01"), DateOrDateTimeWrapper.makeDate("2017-01-03"),
+						DayWrapper.makeDay(1,PlainDoseWrapper.makeDose(new BigDecimal(4)))),
+					StructureWrapper.makeStructure(1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-01-04"), DateOrDateTimeWrapper.makeDate("2017-01-12")),
+					StructureWrapper.makeStructure(1, "mod smerter", 
+						DateOrDateTimeWrapper.makeDate("2017-01-13"), DateOrDateTimeWrapper.makeDate("2017-01-15"),
+						DayWrapper.makeDay(1,PlainDoseWrapper.makeDose(new BigDecimal(4)))),
+					StructureWrapper.makeStructure(1, "mod smerter", 
+							DateOrDateTimeWrapper.makeDate("2017-01-01"), DateOrDateTimeWrapper.makeDate("2017-01-15"))
+				));
+		
+		Assert.assertEquals(DosageType.Combined, DosisTilTekstWrapper.getDosageType144(dosage));
+	}
+	
+
+
 }
