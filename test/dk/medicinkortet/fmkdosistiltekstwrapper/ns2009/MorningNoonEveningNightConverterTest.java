@@ -428,5 +428,112 @@ public class MorningNoonEveningNightConverterTest extends DosisTilTekstWrapperTe
 				0.000000001); 				
 		Assert.assertEquals(DosageType.Fixed, DosisTilTekstWrapper.getDosageType(dosage));		
 	}	
+	
 
+    @Test
+    public void testMorningFixedNightPN() {
+        DosageWrapper dosage = DosageWrapper.makeDosage(
+            StructuresWrapper.makeStructures(
+                UnitOrUnitsWrapper.makeUnit("tablet"), 
+                StructureWrapper.makeStructure(
+                    1, null, DateOrDateTimeWrapper.makeDateTime("2012-06-26 00:00:00"), null, 
+                    DayWrapper.makeDay(
+                        1, 
+                        MorningDoseWrapper.makeDose(new BigDecimal(1)), 
+                        null,
+                        null,
+                        NightDoseWrapper.makeDose(new BigDecimal(1), true)
+                    ))));
+        
+        String longText = DosisTilTekstWrapper.convertLongText(dosage);
+        String shortText = DosisTilTekstWrapper.convertShortText(dosage);
+        Assert.assertEquals("1 tablet morgen, 1 tablet før sengetid efter behov", shortText);
+        Assert.assertTrue(longText.contains("1 tablet morgen + 1 tablet før sengetid efter behov"));
+    }
+    
+    @Test
+    public void testMorningPnNightFixed() {
+        DosageWrapper dosage = DosageWrapper.makeDosage(
+            StructuresWrapper.makeStructures(
+                UnitOrUnitsWrapper.makeUnit("tablet"), 
+                StructureWrapper.makeStructure(
+                    1, null, DateOrDateTimeWrapper.makeDateTime("2012-06-26 00:00:00"), null, 
+                    DayWrapper.makeDay(
+                        1, 
+                        MorningDoseWrapper.makeDose(new BigDecimal(1), true), 
+                        null,
+                        null,
+                        NightDoseWrapper.makeDose(new BigDecimal(1))
+                    ))));
+        
+        String longText = DosisTilTekstWrapper.convertLongText(dosage);
+        String shortText = DosisTilTekstWrapper.convertShortText(dosage);
+        Assert.assertEquals("1 tablet morgen efter behov, 1 tablet før sengetid", shortText);
+        Assert.assertTrue(longText.contains("1 tablet morgen efter behov + 1 tablet før sengetid"));
+    }
+    
+
+    @Test
+    public void testMorningPnNoonFixedNightFixed() {
+        DosageWrapper dosage = DosageWrapper.makeDosage(
+            StructuresWrapper.makeStructures(
+                UnitOrUnitsWrapper.makeUnit("tablet"), 
+                StructureWrapper.makeStructure(
+                    1, null, DateOrDateTimeWrapper.makeDateTime("2012-06-26 00:00:00"), null, 
+                    DayWrapper.makeDay(
+                        1, 
+                        MorningDoseWrapper.makeDose(new BigDecimal(1), true), 
+                        NoonDoseWrapper.makeDose(new BigDecimal(1), true),
+                        EveningDoseWrapper.makeDose(new BigDecimal(1), true),
+                        NightDoseWrapper.makeDose(new BigDecimal(1), true)
+                    ))));
+        
+        String longText = DosisTilTekstWrapper.convertLongText(dosage);
+        String shortText = DosisTilTekstWrapper.convertShortText(dosage);
+        Assert.assertNull(shortText); // Skulle have været "1 tablet morgen efter behov, 1 tablet middag efter behov, 1 tablet aften efter behov, 1 tablet før sengetid efter behov" men for lang    
+    }
+    
+    @Test
+    public void testMorningNoonEveningNightFixed() {
+        DosageWrapper dosage = DosageWrapper.makeDosage(
+            StructuresWrapper.makeStructures(
+                UnitOrUnitsWrapper.makeUnit("tablet"), 
+                StructureWrapper.makeStructure(
+                    1, null, DateOrDateTimeWrapper.makeDateTime("2012-06-26 00:00:00"), null, 
+                    DayWrapper.makeDay(
+                        1, 
+                        MorningDoseWrapper.makeDose(new BigDecimal(1)), 
+                        NoonDoseWrapper.makeDose(new BigDecimal(1)),
+                        EveningDoseWrapper.makeDose(new BigDecimal(1)),
+                        NightDoseWrapper.makeDose(new BigDecimal(1))
+                    ))));
+        
+        String longText = DosisTilTekstWrapper.convertLongText(dosage);
+        String shortText = DosisTilTekstWrapper.convertShortText(dosage);
+        Assert.assertEquals("1 tablet morgen, middag, aften og før sengetid", shortText);
+    }
+    
+    
+    
+    @Test
+    public void testMorningFixedNightPNDifferentQuantities() {
+        DosageWrapper dosage = DosageWrapper.makeDosage(
+            StructuresWrapper.makeStructures(
+                UnitOrUnitsWrapper.makeUnit("tablet"), 
+                StructureWrapper.makeStructure(
+                    1, null, DateOrDateTimeWrapper.makeDateTime("2012-06-26 00:00:00"), null, 
+                    DayWrapper.makeDay(
+                        1, 
+                        MorningDoseWrapper.makeDose(new BigDecimal(1)), 
+                        null,
+                        null,
+                        NightDoseWrapper.makeDose(new BigDecimal(2), true)
+                    ))));
+        
+        String longText = DosisTilTekstWrapper.convertLongText(dosage);
+        String shortText = DosisTilTekstWrapper.convertShortText(dosage);
+        Assert.assertEquals("1 tablet morgen, 2 tabletter før sengetid efter behov", shortText);
+        Assert.assertTrue(longText.contains("1 tablet morgen + 2 tabletter før sengetid efter behov"));
+
+    }
 }
