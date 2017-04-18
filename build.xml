@@ -36,6 +36,11 @@
 		<antcall target="test"/>
 	</target>
 	
+	<target name="test-local">
+		<property name="dosistiltekstJSlocation" value="../fmk-dosis-til-tekst-ts/target/dosistiltekst.js" />
+		<antcall target="test"/>
+	</target>
+	
 	<target name="test-do">
 		<condition property="cond.jmx.port" value="${jmx.port}" else="8005">
 			<isset property="jmx.port"/>
