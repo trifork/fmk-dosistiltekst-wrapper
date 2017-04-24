@@ -84,8 +84,13 @@ public class DosisTilTekstWrapper {
 			throw new RuntimeException("JsonProcessingException inDosisTilTekstWrapper.convertCombined() with json " + json, e);
 		}
 		
+		if(res == null) {
+			return new DosageTranslationCombined(new DosageTranslation(null, null, new DailyDosis()), new LinkedList<DosageTranslation>());
+		}
+		
 		String combinedShortText = (String)res.get("combinedShortText");
 		String combinedLongText = (String)res.get("combinedLongText");
+		
 		DailyDosis combinedDD = getDailyDosisFromJS((ScriptObjectMirror)res.get("combinedDailyDosis"));
 		ScriptObjectMirror  periodTexts = (ScriptObjectMirror)res.get("periodTexts");
 		ScriptObjectMirror[] periodTextArray = periodTexts.to(ScriptObjectMirror[].class);
