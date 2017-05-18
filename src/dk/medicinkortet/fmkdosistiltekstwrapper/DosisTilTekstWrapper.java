@@ -2,19 +2,25 @@ package dk.medicinkortet.fmkdosistiltekstwrapper;
 
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 
+import javax.script.Bindings;
 import javax.script.Compilable;
 import javax.script.CompiledScript;
 import javax.script.Invocable;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import javax.script.SimpleBindings;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.DosageWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.Interval;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.UnitOrUnitsWrapper;
+import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
@@ -35,6 +41,7 @@ public class DosisTilTekstWrapper {
 	private static Object dosageTypeCalculatorObj;
 	private static Object dosageTypeCalculator144Obj;
 	private static Object dailyDosisCalculatorObj;
+	private static Object dosageProposalXMLGeneratorObj;
 	
 	
 	public static void initialize(Reader javascriptFileReader) throws ScriptException {
@@ -44,11 +51,11 @@ public class DosisTilTekstWrapper {
 			// engine = new ScriptEngineManager().getEngineByName("nashorn");
 			Compilable compilingEngine = (Compilable) engine;
 
-			/*
+			
 			Bindings bindings = new SimpleBindings();
 			bindings.put("console", new DosisTilTekstWrapper().new ConsoleObject());
 			engine.setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
-			*/
+			
 			script = compilingEngine.compile(javascriptFileReader);
 			script.eval();
 			
@@ -58,8 +65,50 @@ public class DosisTilTekstWrapper {
 			dosageTypeCalculatorObj = engine.eval("dosistiltekst.DosageTypeCalculator");
 			dosageTypeCalculator144Obj = engine.eval("dosistiltekst.DosageTypeCalculator144");
 			dailyDosisCalculatorObj = engine.eval("dosistiltekst.DailyDosisCalculator");
+			dosageProposalXMLGeneratorObj = engine.eval("dosistiltekst.DosageProposalXMLGenerator");
 			invocable = (Invocable) engine;
 		}
+	}
+	
+	public enum FMKVersion {
+		FMK140,
+		FMK142,
+		FMK144,
+		FMK146
+	};
+	
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+	public static DosageProposalResult getDosageProposalResult(String type, int iteration, String mapping, String unitTextSingular, String unitTextPlural, String supplementaryText, Date beginDate, Date endDate, FMKVersion version, int dosageProposalVersion) {
+		if(engine == null) {
+			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
+		}
+		
+		ScriptObjectMirror res = null;
+		
+		try {
+			 JSObject dateConstructor = (JSObject) engine.eval("Date");
+			 Object beginDateJS = dateConstructor.newObject(new Double(beginDate.getTime()));
+			 Object endDateJS = dateConstructor.newObject(new Double(endDate.getTime()));
+			    
+			res = (ScriptObjectMirror) invocable.invokeMethod(dosageProposalXMLGeneratorObj, "generateXMLSnippet", type, iteration, mapping, unitTextSingular, unitTextPlural, supplementaryText, beginDateJS, endDateJS, version.toString(), dosageProposalVersion);
+		} catch (ScriptException e) {
+			e.printStackTrace();
+			throw new RuntimeException("ScriptException in DosisTilTekstWrapper.getDosageProposalResult()", e);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+			throw new RuntimeException("NoSuchMethodException in DosisTilTekstWrapper.getDosageProposalResult()", e);
+		} 
+		
+		if(res == null) {
+			return null;
+		}
+		
+		String shortText = (String)res.callMember("getShortDosageTranslation");
+		String longText = (String)res.callMember("getLongDosageTranslation");
+		String xml = (String)res.callMember("getXml");
+		
+		return new DosageProposalResult(xml, shortText, longText);
 	}
 	
 	public static DosageTranslationCombined convertCombined(DosageWrapper dosage) {
