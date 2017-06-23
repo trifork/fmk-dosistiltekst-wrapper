@@ -43,12 +43,20 @@ import dk.medicinkortet.fmkdosistiltekstwrapper.DosisTilTekstWrapper.FMKVersion;
 ...
 SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-DosageProposalResult res = DosisTilTekstWrapper.getDosageProposalResult("PN", 1, "1", "tablet", "tabletter", ", tages med rigeligt vand", SIMPLE_DATE_FORMAT.parse("2017-05-17"), SIMPLE_DATE_FORMAT.parse("2017-06-01"), FMKVersion.FMK146, 1);
+DosageProposalResult res = DosisTilTekstWrapper.getDosageProposalResult("PN", "1", "1", "tablet", "tabletter", ", tages med rigeligt vand", Arrays.asList(SIMPLE_DATE_FORMAT.parse("2017-05-17")), Arrays.asList(SIMPLE_DATE_FORMAT.parse("2017-06-01")), FMKVersion.FMK146, 1);
 
 String xml = res.getXmlSnippet();
 String longText = res.getLongText();
 String shortText = res.getShortText();
 ```
+Eksempel på anvendelse med flere doseringsperioder:
+```
+DosageProposalResult res = DosisTilTekstWrapper.getDosageProposalResult("{M+M+A+N}{PN}{N daglig}", "{1}{2}{1}",
+				"{1+2+3+4}{dag 1: 2 dag 2: 3}{2}", "tablet", "tabletter", "tages med rigeligt vand",
+				Arrays.asList(SIMPLE_DATE_FORMAT.parse("2010-01-01"), SIMPLE_DATE_FORMAT.parse("2010-02-01"), SIMPLE_DATE_FORMAT.parse("2010-03-01")),
+				Arrays.asList(SIMPLE_DATE_FORMAT.parse("2010-01-31"), SIMPLE_DATE_FORMAT.parse("2010-02-28"), SIMPLE_DATE_FORMAT.parse("2010-03-31")),
+				FMKVersion.FMK146, 1);
+```				
 
 ## Kun til udviklere af selve fmk-dosistiltekst-wrapper komponenten:
 Forudsætter fmk-dosis-til-tekst-ts er checket ud og bygget "parallelt" med dette projekt, således at ../fmk-dosis-til-tekst-ts/target/dosistiltekst.js er tilgængelig.

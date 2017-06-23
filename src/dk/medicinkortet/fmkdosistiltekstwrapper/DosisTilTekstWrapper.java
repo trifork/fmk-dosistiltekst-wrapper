@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.script.Bindings;
 import javax.script.Compilable;
@@ -79,7 +80,7 @@ public class DosisTilTekstWrapper {
 	
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-	public static DosageProposalResult getDosageProposalResult(String type, int iteration, String mapping, String unitTextSingular, String unitTextPlural, String supplementaryText, Date beginDate, Date endDate, FMKVersion version, int dosageProposalVersion) {
+	public static DosageProposalResult getDosageProposalResult(String type, String iteration, String mapping, String unitTextSingular, String unitTextPlural, String supplementaryText, List<Date> beginDates, List<Date> endDates, FMKVersion version, int dosageProposalVersion) {
 		if(engine == null) {
 			throw new RuntimeException("DosisTilTekstWrapper not initialized - call initialize() method before invoking any of the methods");
 		}
@@ -87,11 +88,21 @@ public class DosisTilTekstWrapper {
 		ScriptObjectMirror res = null;
 		
 		try {
+			JSObject arrayConstructor = (JSObject)engine.eval("Array");
+			JSObject beginDateArray = (JSObject)arrayConstructor.newObject(null);
+			JSObject endDateArray = (JSObject)arrayConstructor.newObject(null);
+			
 			 JSObject dateConstructor = (JSObject) engine.eval("Date");
-			 Object beginDateJS = dateConstructor.newObject(new Double(beginDate.getTime()));
-			 Object endDateJS = dateConstructor.newObject(new Double(endDate.getTime()));
+		 
+			 for(int i = 0; i < beginDates.size(); i++) {
+				 Object beginDateJS = dateConstructor.newObject(new Double(beginDates.get(i).getTime()));
+				 ((Invocable)engine).invokeMethod(beginDateArray, "push", beginDateJS);
+				 Object endDateJS = dateConstructor.newObject(new Double(endDates.get(i).getTime()));
+				 ((Invocable)engine).invokeMethod(endDateArray, "push", endDateJS);
+				 	 
+			 }
 			    
-			res = (ScriptObjectMirror) invocable.invokeMethod(dosageProposalXMLGeneratorObj, "generateXMLSnippet", type, iteration, mapping, unitTextSingular, unitTextPlural, supplementaryText, beginDateJS, endDateJS, version.toString(), dosageProposalVersion);
+			res = (ScriptObjectMirror) invocable.invokeMethod(dosageProposalXMLGeneratorObj, "generateXMLSnippet", type, iteration, mapping, unitTextSingular, unitTextPlural, supplementaryText, beginDateArray, endDateArray, version.toString(), dosageProposalVersion);
 		} catch (ScriptException e) {
 			e.printStackTrace();
 			throw new RuntimeException("ScriptException in DosisTilTekstWrapper.getDosageProposalResult()", e);
