@@ -1,23 +1,24 @@
 <?xml version="1.0"?>
 <!-- the project element's name attribute will be used in the name of the 
 	module's jar file -->
-<project name="fmk-dosistiltekst-wrapper" basedir=".">
+<project name="fmk-dosistiltekst-wrapper" default="jar" basedir=".">
 
-	<property name="sourceversion" value="1.8" />
-	<property name="targetversion" value="1.8" />
-
+	<property name="sourceversion" value="1.6"/>
+	<property name="targetversion" value="1.6"/>
+	
 	<property file="build.properties" />
 	<property file="revision.properties" />
 	<property name="trifork-common" value="${basedir}/../trifork-common" />
 	<property name="npm.local.executable" value="npm" />
 	<import file="${trifork-common}/etc/build-common.xml" />
 
+	
 	<property environment="env" />
 
 	<path id="sourcepath">
 		<pathelement location="src" />
 	</path>
-
+	
 	<target name="compile-test" depends="compile,init-test, resolve-test">
 		<echo message="test.dir=${test.dir}" />
 		<javac classpathref="compile-test-classpath" destdir="target/test"

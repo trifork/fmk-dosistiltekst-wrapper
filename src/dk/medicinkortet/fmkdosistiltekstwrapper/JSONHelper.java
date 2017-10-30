@@ -21,7 +21,7 @@ import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.NoonDoseWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.PlainDoseWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.TimedDoseWrapper;
 
-class JSONHelper {
+public class JSONHelper {
 	static ObjectMapper mapper = null;
 	
 	public static class DateOrDateTimeWrapperSerializer extends StdSerializer<DateOrDateTimeWrapper> {
