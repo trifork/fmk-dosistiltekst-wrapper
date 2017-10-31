@@ -6,6 +6,6 @@
 	<classpathentry kind="lib" path="lib/build/com.fasterxml.jackson.core-jackson-core.jar"/>
 	<classpathentry kind="lib" path="lib/build/com.fasterxml.jackson.core-jackson-databind.jar"/>
 	<classpathentry kind="lib" path="lib/build/com.fasterxml.jackson.core-jackson-annotations.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_80"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.6.0_45"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
