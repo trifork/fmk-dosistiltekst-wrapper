@@ -72,12 +72,4 @@ public class PlainDoseWrapper extends DoseWrapper {
 			return null;
 		return new PlainDoseWrapper(null, minimalQuantity, maximalQuantity, null, minimalSupplText, maximalSupplText, isAccordingToNeed);
 	}	
-		
-	public final static String LABEL = "";  
-	
-	@Override
-	public String getLabel() {
-		return LABEL;
-	}
-
 }

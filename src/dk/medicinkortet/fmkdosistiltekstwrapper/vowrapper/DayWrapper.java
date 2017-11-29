@@ -22,7 +22,6 @@
 
 package dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +45,6 @@ public class DayWrapper {
 	private NightDoseWrapper nightDose;
 	
 	// Helper / cached values
-	private Boolean areAllDosesTheSame;
-	private Boolean areAllDosesExceptTheFirstTheSame;
-	private Boolean areAllDosesHaveTheSameQuantity;
 	private ArrayList<DoseWrapper> accordingToNeedDoses;
 	
 	private DayWrapper() {
@@ -137,151 +133,4 @@ public class DayWrapper {
 	public List<DoseWrapper> getAllDoses() {
 		return allDoses;		
 	}
-	
-	/**
-	 * Compares dosage quantities and the dosages label (the type of the dosage)
-	 * @return true if all dosages are of the same type and has the same quantity
-	 */
-	public boolean allDosesAreTheSame() {
-		if(areAllDosesTheSame==null) {
-			areAllDosesTheSame = true;
-			DoseWrapper dose0 = null;
-			for(DoseWrapper dose: getAllDoses()) {
-				if(dose0==null) {
-					dose0 = dose;
-				}
-				else if(!dose0.theSameAs(dose)) {
-					areAllDosesTheSame = false;
-					break;
-				}	
-			}
-		}
-		return areAllDosesTheSame;
-	}
-	
-	
-	public boolean allDosesButTheFirstAreTheSame() {
-		if(areAllDosesExceptTheFirstTheSame==null) {
-			areAllDosesExceptTheFirstTheSame = true;
-			DoseWrapper dose0 = null;
-			for(int i = 1; i < getNumberOfDoses();i++) {
-				if(dose0==null) {
-					dose0 = getAllDoses().get(i);
-				}
-				else if(!dose0.theSameAs(getAllDoses().get(i))) {
-					areAllDosesExceptTheFirstTheSame = false;
-					break;
-				}	
-			}
-		}
-		return areAllDosesExceptTheFirstTheSame;
-	}
-	
-
-	/**
-	 * Compares dosage quantities (but not the dosages label)
-	 * @return true if all dosages has the same quantity
-	 */
-	public boolean allDosesHaveTheSameQuantity() {
-		if(areAllDosesHaveTheSameQuantity==null) {
-			areAllDosesHaveTheSameQuantity = true;
-			if(allDoses.size()>1) {
-				DoseWrapper dose0 = allDoses.get(0);
-				for(int i=1; i<allDoses.size(); i++) {
-					if(!dose0.getAnyDoseQuantityString().equals(allDoses.get(i).getAnyDoseQuantityString())) {
-						areAllDosesHaveTheSameQuantity = false;
-						break;
-					}
-				}
-			}
-		}
-		return areAllDosesHaveTheSameQuantity;
-	}
-	
-	public boolean containsAccordingToNeedDose() {
-		for(DoseWrapper dose: getAllDoses()) {
-			if(dose.isAccordingToNeed()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean containsTimedDose() {
-		for(DoseWrapper dose: getAllDoses()) {
-			if(dose instanceof TimedDoseWrapper) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean containsPlainDose() {
-		for(DoseWrapper dose: getAllDoses()) {
-			if(dose instanceof PlainDoseWrapper) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean containsPlainNotAccordingToNeedDose() {
-		for(DoseWrapper dose: getAllDoses()) {
-			if(dose instanceof PlainDoseWrapper && !dose.isAccordingToNeed()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean containsMorningNoonEveningNightDoses() {
-		for(DoseWrapper dose: getAllDoses()) {
-			if(dose instanceof MorningDoseWrapper || dose instanceof NoonDoseWrapper 
-					|| dose instanceof EveningDoseWrapper || dose instanceof NightDoseWrapper) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean containsAccordingToNeedDosesOnly() {
-		for(DoseWrapper dose: getAllDoses()) {
-			if(!(dose.isAccordingToNeed())) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public Interval<BigDecimal> getSumOfDoses() {
-		BigDecimal minValue = newDosage();
-		BigDecimal maxValue = newDosage();
-		for(DoseWrapper dose: getAllDoses()) {
-			if(dose.getDoseQuantity()!=null) {
-				minValue = addDosage(minValue, dose.getDoseQuantity());
-				maxValue = addDosage(maxValue, dose.getDoseQuantity());
-			}
-			else if(dose.getMinimalDoseQuantity()!=null && dose.getMaximalDoseQuantity()!=null) {
-				minValue = addDosage(minValue, dose.getMinimalDoseQuantity());
-				maxValue = addDosage(maxValue, dose.getMaximalDoseQuantity());
-			}
-			else {
-				throw new RuntimeException();
-			}
-		}		
-		return new Interval<BigDecimal>(minValue, maxValue);		
-	}
-	
-	private static BigDecimal newDosage() {
-		BigDecimal v = new BigDecimal(0.0);
-		v = v.setScale(9, BigDecimal.ROUND_HALF_UP);
-		return v;
-	}
-	
-	private static BigDecimal addDosage(BigDecimal bd, BigDecimal d) {
-		if(d==null)
-			throw new NullPointerException();
-		return bd.add(d);
-	}
-	
 }

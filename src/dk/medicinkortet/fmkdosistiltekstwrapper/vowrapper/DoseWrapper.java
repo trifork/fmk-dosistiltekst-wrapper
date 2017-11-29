@@ -61,8 +61,6 @@ public abstract class DoseWrapper {
 			return trim(number.substring(0, number.length()-1));
 	}
 	
-	abstract public String getLabel();
-	
 	public static BigDecimal toBigDecimal(Double value) {
 		if(value==null)
 			return null;
@@ -109,35 +107,4 @@ public abstract class DoseWrapper {
 	public boolean isAccordingToNeed() {
 		return isAccordingToNeed;
 	}
-	
-	public String getAnyDoseQuantityString() {
-		if(getDoseQuantityString()!=null)
-			return getDoseQuantityString();
-		else
-			return getMinimalDoseQuantityString() + "-" + getMaximalDoseQuantityString();
-	}
-
-	public boolean theSameAs(DoseWrapper other) {
-		if(!getLabel().equals(other.getLabel()))
-			return false;
-		if(isAccordingToNeed!=other.isAccordingToNeed())
-			return false;
-		if(!equalsWhereNullsAreTrue(getMinimalDoseQuantityString(), other.getMinimalDoseQuantityString()))
-			return false;
-		if(!equalsWhereNullsAreTrue(getMaximalDoseQuantityString(), other.getMaximalDoseQuantityString()))
-			return false;
-		if(!equalsWhereNullsAreTrue(getDoseQuantityString(), other.getDoseQuantityString()))
-			return false;
-		return true;
-	}
-	
-	private boolean equalsWhereNullsAreTrue(Object a, Object b) {
-		if(a==null && b==null)
-			return true;
-		else if((a==null && b!=null) || (a!=null && b==null))
-			return false;
-		else 
-			return a.toString().equals(b.toString());
-	}
-	
 }

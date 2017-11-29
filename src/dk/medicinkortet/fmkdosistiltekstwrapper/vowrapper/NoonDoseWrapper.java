@@ -67,12 +67,4 @@ public class NoonDoseWrapper extends DoseWrapper {
 			return null;
 		return new NoonDoseWrapper(null, minimalQuantity, maximalQuantity, null, minimalSupplText, maximalSupplText, isAccordingToNeed);
 	}	
-	
-	public final static String LABEL = "middag";  
-	
-	@Override
-	public String getLabel() {
-		return LABEL;
-	}
-	
 }

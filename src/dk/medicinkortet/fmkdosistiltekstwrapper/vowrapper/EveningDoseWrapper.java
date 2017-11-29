@@ -74,12 +74,4 @@ public class EveningDoseWrapper extends DoseWrapper {
 			return null;
 		return new EveningDoseWrapper(null, minimalQuantity, maximalQuantity, null, minimalSupplText, maximalSupplText, isAccordingToNeed);
 	}	
-	
-	public final static String LABEL = "aften";  
-
-	@Override
-	public String getLabel() {
-		return LABEL;
-	}
-
 }

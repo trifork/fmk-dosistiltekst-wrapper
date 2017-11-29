@@ -61,13 +61,6 @@ public class TimedDoseWrapper extends DoseWrapper {
 			return null;
 		return new TimedDoseWrapper(time, null, minimalQuantity, maximalQuantity, null, minimalSupplText, maximalSupplText, isAccordingToNeed);
 	}	
-	
-	public final static String LABEL = "kl.";  
-	
-	@Override
-	public String getLabel() {
-		return LABEL+" "+time.toString();
-	}
 
 	public String getTimeString() {
 		return time.toString();
@@ -76,14 +69,4 @@ public class TimedDoseWrapper extends DoseWrapper {
 	public LocalTime getTime() {
 		return time;
 	}
-
-	@Override
-	public boolean theSameAs(DoseWrapper other) {
-		if(!(other instanceof TimedDoseWrapper))
-			return false;
-		if(!super.theSameAs(other))
-			return false;
-		return getTimeString().equals(((TimedDoseWrapper)other).getTimeString());
-	}
-
 }

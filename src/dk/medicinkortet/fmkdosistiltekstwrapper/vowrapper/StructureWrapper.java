@@ -39,53 +39,25 @@ public class StructureWrapper {
 	private String supplText;	
 	private DateOrDateTimeWrapper startDateOrDateTime;
 	private DateOrDateTimeWrapper endDateOrDateTime;
-	private SortedSet<DayWrapper> days;
+	private List<DayWrapper> days;
 	private Object refToSource;
 	private String dosagePeriodPostfix;
-	
-	// Cached values
-	private Boolean areAllDaysTheSame;
-	private Boolean areAllDosesTheSame;
-	private ArrayList<DayWrapper> daysAsList;
-
-	private static final Comparator<DayWrapper> DAY_COMPARATOR = new Comparator<DayWrapper>() {
-		@Override
-		public int compare(DayWrapper o1, DayWrapper o2) {
-			return o1.getDayNumber() - o2.getDayNumber();
-		}
-	};
 	
 	/**
 	 * Factory metod to create structured dosages
 	 */
 	public static StructureWrapper makeStructure(int iterationInterval, String supplText, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, DayWrapper... days) {
-		TreeSet<DayWrapper> set = new TreeSet<DayWrapper>(DAY_COMPARATOR);
-		set.addAll(Arrays.asList(days));
-		return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, set, null);
+		return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, Arrays.asList(days), null);
 	}
 	
-	/**
-	 * Factory metod to create structured dosages
-	 */
-	public static StructureWrapper makeStructure(int iterationInterval, String supplText, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, Collection<DayWrapper> days, Object refToSource) {
-		
-		if(days instanceof SortedSet<?>)
-			return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, (SortedSet<DayWrapper>)days, refToSource);
-		else {
-			TreeSet<DayWrapper> set = new TreeSet<DayWrapper>(DAY_COMPARATOR);
-			set.addAll(days);
-			return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, set, refToSource);
-		}
-		
-	}
 	
-	public static StructureWrapper makeStructure(int iterationInterval, String supplText, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, Collection<DayWrapper> days) {
-		return makeStructure(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, days, null);
+	public static StructureWrapper makeStructure(int iterationInterval, String supplText, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, List<DayWrapper> days) {
+		return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, days, null);
 	}
 	
 	private StructureWrapper(int iterationInterval, String supplText, 
 			DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime,
-			SortedSet<DayWrapper> days,
+			List<DayWrapper> days,
 			Object refToSource) {
 		this.iterationInterval = iterationInterval;
 		this.supplText = supplText;
@@ -140,131 +112,4 @@ public class StructureWrapper {
 		return cal1.get(GregorianCalendar.YEAR) == cal2.get(GregorianCalendar.YEAR) &&
 				cal1.get(GregorianCalendar.DAY_OF_YEAR) == cal2.get(GregorianCalendar.DAY_OF_YEAR);
 }	
-
-	public SortedSet<DayWrapper> getDays() {
-		return days;
-	}	
-	
-	public List<DayWrapper> getDaysAsList() {
-		if(daysAsList==null)
-			daysAsList = new ArrayList<DayWrapper>(getDays());
-		return daysAsList;
-	}
-	
-	public DayWrapper getDay(int dayNumber) {
-		for(DayWrapper day: days) 
-			if(day.getDayNumber()==dayNumber)
-				return day;
-		return null;
-	}
-	
-	public boolean sameDayOfWeek() {
-		 List<DayWrapper> daysAsList = getDaysAsList();
-		 if(daysAsList.size()==1)
-			 return false;
-		 int remainder = -1;
-		 for(DayWrapper day: daysAsList) {
-			 int r = day.getDayNumber() % 7;
-			 if(remainder>=0&& remainder!=r)
-				return false;
-			 remainder = r;
-		 }
-		 return true;
-	}
-	
-	public boolean allDaysAreTheSame() {
-		if(areAllDaysTheSame==null) {
-			areAllDaysTheSame = true;
-			DayWrapper day0 = null;
-			for(DayWrapper day: days) {
-				if(day0==null) {
-					day0 = day;
-				}
-				else {
-					if(day0.getNumberOfDoses()!=day.getNumberOfDoses()) {
-						areAllDaysTheSame = false;
-						break;						
-					}
-					else {
-						for(int d=0; d<day0.getNumberOfDoses(); d++) {
-							if(!day0.getAllDoses().get(d).theSameAs(day.getAllDoses().get(d))) {
-								areAllDaysTheSame = false;
-								break;						
-							}
-						}
-					}
-				}
-			}
-		}
-		return areAllDaysTheSame;
-	}	
-
-	public boolean daysAreInUninteruptedSequenceFromOne() {
-		int dayNumber = 1;
-		for(DayWrapper day: getDays()) {
-			if(day.getDayNumber()!=dayNumber)
-				return false;
-			dayNumber++;
-		}
-		return true;
-	}
-	
-	/**
-	 * Compares dosage quantities and the dosages label (the type of the dosage)
-	 * @return true if all dosages are of the same type and has the same quantity
-	 */
-	public boolean allDosesAreTheSame() {
-		if(areAllDosesTheSame==null) {
-			areAllDosesTheSame = true;
-			DoseWrapper dose0 = null;
-			for(DayWrapper day: days) {
-				for(DoseWrapper dose: day.getAllDoses()) {
-					if(dose0==null) {
-						dose0 = dose;
-					}
-					else if(!dose0.theSameAs(dose)) {
-						areAllDosesTheSame = false;
-						break;
-					}	
-				}
-			}
-		}
-		return areAllDosesTheSame;
-	}
-	
-	
-	public boolean containsMorningNoonEveningNightDoses() {
-		for(DayWrapper day: days) 
-			if(day.containsMorningNoonEveningNightDoses())
-				return true;
-		return false;
-	}	
-	
-	public boolean containsPlainDose() {		
-		for(DayWrapper day: days) 
-			if(day.containsPlainDose())
-				return true;
-		return false;
-	}	
-
-	public boolean containsTimedDose() {		
-		for(DayWrapper day: days) 
-			if(day.containsTimedDose())
-				return true;
-		return false;
-	}	
-	
-	public boolean containsAccordingToNeedDosesOnly() {		
-		for(DayWrapper day: days) 
-			if(!day.containsAccordingToNeedDosesOnly())
-				return false;
-		return true;
-	}
-
-	public boolean containsAccordingToNeedDose() {		
-		for(DayWrapper day: days) 
-			if(day.containsAccordingToNeedDose())
-				return true;
-		return false;
-	}
 }
