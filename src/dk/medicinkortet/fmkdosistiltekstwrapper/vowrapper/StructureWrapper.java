@@ -39,7 +39,7 @@ public class StructureWrapper {
 	private String supplText;	
 	private DateOrDateTimeWrapper startDateOrDateTime;
 	private DateOrDateTimeWrapper endDateOrDateTime;
-	private List<DayWrapper> days;
+	private ArrayList<DayWrapper> days;
 	private Object refToSource;
 	private String dosagePeriodPostfix;
 	
@@ -47,17 +47,17 @@ public class StructureWrapper {
 	 * Factory metod to create structured dosages
 	 */
 	public static StructureWrapper makeStructure(int iterationInterval, String supplText, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, DayWrapper... days) {
-		return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, Arrays.asList(days), null);
+		return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, new ArrayList<DayWrapper>(Arrays.asList(days)), null);
 	}
 	
 	
-	public static StructureWrapper makeStructure(int iterationInterval, String supplText, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, List<DayWrapper> days) {
+	public static StructureWrapper makeStructure(int iterationInterval, String supplText, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, ArrayList<DayWrapper> days) {
 		return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, days, null);
 	}
 	
 	private StructureWrapper(int iterationInterval, String supplText, 
 			DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime,
-			List<DayWrapper> days,
+			ArrayList<DayWrapper> days,
 			Object refToSource) {
 		this.iterationInterval = iterationInterval;
 		this.supplText = supplText;
@@ -72,6 +72,10 @@ public class StructureWrapper {
 
 	public int getIterationInterval() {
 		return iterationInterval;
+	}
+	
+	public ArrayList<DayWrapper> getDays() {
+		return days;
 	}
 
 	public String getSupplText() {
