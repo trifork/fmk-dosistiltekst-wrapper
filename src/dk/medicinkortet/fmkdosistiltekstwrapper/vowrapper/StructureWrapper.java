@@ -22,15 +22,10 @@
 
 package dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class StructureWrapper {
 	
@@ -49,12 +44,23 @@ public class StructureWrapper {
 	public static StructureWrapper makeStructure(int iterationInterval, String supplText, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, DayWrapper... days) {
 		return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, new ArrayList<DayWrapper>(Arrays.asList(days)), null);
 	}
-	
+
+	public static StructureWrapper makeStructure(int iterationInterval, String supplText, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, Collection<DayWrapper> days) {
+		return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, new ArrayList<DayWrapper>(days), null);
+	}
+
 	
 	public static StructureWrapper makeStructure(int iterationInterval, String supplText, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, ArrayList<DayWrapper> days) {
 		return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, days, null);
 	}
 	
+    /**
+     * Factory metod to create structured dosages
+     */
+    public static StructureWrapper makeStructure(int iterationInterval, String supplText, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, Collection<DayWrapper> days, Object refToSource) {
+    	return new StructureWrapper(iterationInterval, supplText, startDateOrDateTime, endDateOrDateTime, new ArrayList<DayWrapper>(days), refToSource);
+    }
+    
 	private StructureWrapper(int iterationInterval, String supplText, 
 			DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime,
 			ArrayList<DayWrapper> days,
@@ -115,5 +121,5 @@ public class StructureWrapper {
 		cal2.setTime(getEndDateOrDateTime().getDateOrDateTime());
 		return cal1.get(GregorianCalendar.YEAR) == cal2.get(GregorianCalendar.YEAR) &&
 				cal1.get(GregorianCalendar.DAY_OF_YEAR) == cal2.get(GregorianCalendar.DAY_OF_YEAR);
-}	
+	}	
 }

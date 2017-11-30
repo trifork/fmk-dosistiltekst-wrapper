@@ -23,18 +23,22 @@
 package dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 public class StructuresWrapper {
 	
 	private UnitOrUnitsWrapper unitOrUnits;
-	private List<StructureWrapper> structures;
+	private Collection<StructureWrapper> structures;
 		
 	public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, StructureWrapper... structures) {
 		return new StructuresWrapper(unitOrUnits, Arrays.asList(structures));
 	}
 
-	private StructuresWrapper(UnitOrUnitsWrapper unitOrUnits, List<StructureWrapper> structures) {
+    public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, Collection<StructureWrapper> structures) {
+		return new StructuresWrapper(unitOrUnits, structures);
+    }
+    
+	private StructuresWrapper(UnitOrUnitsWrapper unitOrUnits, Collection<StructureWrapper> structures) {
 		this.unitOrUnits = unitOrUnits;
 		if(structures==null)
 			throw new NullPointerException();
@@ -47,7 +51,7 @@ public class StructuresWrapper {
 		return unitOrUnits;
 	}
 
-	public List<StructureWrapper> getStructures() {
+	public Collection<StructureWrapper> getStructures() {
 		return structures;
 	}
 }
