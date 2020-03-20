@@ -1,0 +1,17 @@
+Dosering som gentages hver 14. dag fra d. 19. apr. 2012:
+Dag 1: 2 stk morgen
+Dag 2: 1 stk morgen
+Dag 3: 2 stk morgen
+Dag 4: 1 stk morgen
+Dag 5: 2 stk morgen
+Dag 6: 1 stk morgen
+Dag 7: 2 stk morgen
+Dag 8: 1 stk morgen
+Dag 9: 2 stk morgen
+Dag 10: 1 stk morgen
+Dag 11: 2 stk morgen
+Dag 12: 1 stk morgen
+Dag 13: 2 stk morgen
+Dag 14: 1 stk morgen
+Dag 1: 2 stk morgen
+...
