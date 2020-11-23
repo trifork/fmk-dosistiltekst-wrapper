@@ -41,11 +41,11 @@ public class StructuresWrapper {
     }
     
     public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, StructureWrapper... structures) {
-		return new StructuresWrapper(unitOrUnits, Arrays.asList(structures), null, null);
+		return new StructuresWrapper(unitOrUnits, Arrays.asList(structures), startDateOrDateTime, endDateOrDateTime);
 	}
 
     public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, Collection<StructureWrapper> structures) {
-		return new StructuresWrapper(unitOrUnits, structures, null, null);
+		return new StructuresWrapper(unitOrUnits, structures, startDateOrDateTime, endDateOrDateTime);
     }
  
 	private StructuresWrapper(UnitOrUnitsWrapper unitOrUnits, Collection<StructureWrapper> structures, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime) {
