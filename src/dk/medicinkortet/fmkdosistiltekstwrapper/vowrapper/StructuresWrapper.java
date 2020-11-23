@@ -29,16 +29,26 @@ public class StructuresWrapper {
 	
 	private UnitOrUnitsWrapper unitOrUnits;
 	private Collection<StructureWrapper> structures;
-		
+	private DateOrDateTimeWrapper startDateOrDateTime;
+	private DateOrDateTimeWrapper endDateOrDateTime;
+	
 	public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, StructureWrapper... structures) {
-		return new StructuresWrapper(unitOrUnits, Arrays.asList(structures));
+		return new StructuresWrapper(unitOrUnits, Arrays.asList(structures), null, null);
 	}
 
     public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, Collection<StructureWrapper> structures) {
-		return new StructuresWrapper(unitOrUnits, structures);
+		return new StructuresWrapper(unitOrUnits, structures, null, null);
     }
     
-	private StructuresWrapper(UnitOrUnitsWrapper unitOrUnits, Collection<StructureWrapper> structures) {
+    public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, StructureWrapper... structures) {
+		return new StructuresWrapper(unitOrUnits, Arrays.asList(structures), null, null);
+	}
+
+    public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, Collection<StructureWrapper> structures) {
+		return new StructuresWrapper(unitOrUnits, structures, null, null);
+    }
+ 
+	private StructuresWrapper(UnitOrUnitsWrapper unitOrUnits, Collection<StructureWrapper> structures, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime) {
 		this.unitOrUnits = unitOrUnits;
 		if(structures==null)
 			throw new NullPointerException();
@@ -53,5 +63,13 @@ public class StructuresWrapper {
 
 	public Collection<StructureWrapper> getStructures() {
 		return structures;
+	}
+
+	public DateOrDateTimeWrapper getStartDateOrDateTime() {
+		return startDateOrDateTime;
+	}
+	
+	public DateOrDateTimeWrapper getEndDateOrDateTime() {
+		return endDateOrDateTime;
 	}
 }
