@@ -55,6 +55,8 @@ public class StructuresWrapper {
 		if(structures.size()==0)
 			throw new IllegalArgumentException();
 		this.structures = structures;
+		this.startDateOrDateTime = startDateOrDateTime;
+		this.endDateOrDateTime = endDateOrDateTime;
 	}
 	
 	public UnitOrUnitsWrapper getUnitOrUnits() {
