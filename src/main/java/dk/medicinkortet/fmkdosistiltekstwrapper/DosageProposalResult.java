@@ -6,7 +6,6 @@ public class DosageProposalResult {
 	private final String longText;
 	
 	public DosageProposalResult(String xmlSnippet, String shortText, String longText) {
-		super();
 		this.xmlSnippet = xmlSnippet;
 		this.shortText = shortText;
 		this.longText = longText;

@@ -22,10 +22,10 @@
 
 package dk.medicinkortet.fmkdosistiltekstwrapper;
 
-import java.math.BigDecimal;
-
-import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.UnitOrUnitsWrapper;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.Interval;
+import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.UnitOrUnitsWrapper;
+
+import java.math.BigDecimal;
 
 public class DailyDosis {
 	
