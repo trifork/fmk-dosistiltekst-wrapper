@@ -1,9 +1,6 @@
 package dk.medicinkortet.fmkdosistiltekstwrapper;
 
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,15 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.*;
 
-import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.DateOrDateTimeWrapper;
-import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.DoseWrapper;
-import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.EveningDoseWrapper;
-import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.MorningDoseWrapper;
-import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.NightDoseWrapper;
-import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.NoonDoseWrapper;
-import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.PlainDoseWrapper;
-import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.TimedDoseWrapper;
+import java.io.IOException;
 
 public class JSONHelper {
 	static ObjectMapper mapper = null;
