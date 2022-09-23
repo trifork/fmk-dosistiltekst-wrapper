@@ -25,8 +25,6 @@ package dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.DoseWrapper;
-
 public class DayWrapper {
 		
 	// Wrapped values
