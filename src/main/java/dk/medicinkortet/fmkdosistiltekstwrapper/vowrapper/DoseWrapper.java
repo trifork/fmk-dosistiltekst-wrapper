@@ -23,6 +23,7 @@
 package dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public abstract class DoseWrapper {
 	
@@ -65,7 +66,7 @@ public abstract class DoseWrapper {
 		if(value==null)
 			return null;
 		BigDecimal v = new BigDecimal(value);
-		v = v.setScale(9, BigDecimal.ROUND_HALF_UP);
+		v = v.setScale(9, RoundingMode.HALF_UP);
 		return v;		
 	}
 	    
