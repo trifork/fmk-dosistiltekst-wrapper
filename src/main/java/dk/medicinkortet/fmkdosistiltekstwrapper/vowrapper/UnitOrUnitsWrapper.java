@@ -27,7 +27,10 @@ public class UnitOrUnitsWrapper {
 	private String unit;
 	private String unitSingular;
 	private String unitPlural;
-	
+
+	public UnitOrUnitsWrapper() {
+	}
+
 	public static UnitOrUnitsWrapper makeUnit(String unit) {
 		return new UnitOrUnitsWrapper(unit, null, null);
 	}
@@ -35,7 +38,7 @@ public class UnitOrUnitsWrapper {
 	public static UnitOrUnitsWrapper makeUnits(String unitSingular, String unitPlural) {
 		return new UnitOrUnitsWrapper(null, unitSingular, unitPlural);
 	}
-	
+
 	private UnitOrUnitsWrapper(String unit, String unitSingular, String unitPlural) {
 		this.unit = unit;
 		this.unitSingular = unitSingular;
