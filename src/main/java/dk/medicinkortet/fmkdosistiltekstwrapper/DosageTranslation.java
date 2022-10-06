@@ -2,21 +2,23 @@ package dk.medicinkortet.fmkdosistiltekstwrapper;
 
 /**
  * A combination of shorttext, longtext and dailydosis for a structured dosage (either combined or for one period)
- *
  */
 public class DosageTranslation {
 	String shortText;
 	String longText;
 	DailyDosis dailyDosis;
-	
+
+	public DosageTranslation() {
+	}
+
 	public String getShortText() {
 		return shortText;
 	}
-	
+
 	public String getLongText() {
 		return longText;
 	}
-	
+
 	public DailyDosis getDailyDosis() {
 		return dailyDosis;
 	}
