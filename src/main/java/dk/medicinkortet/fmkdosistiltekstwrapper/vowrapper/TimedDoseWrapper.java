@@ -30,22 +30,26 @@ public class TimedDoseWrapper extends DoseWrapper {
 	private LocalTime time;
 
 	private TimedDoseWrapper(
-            LocalTime time,
-			BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity, 
-			String doseQuantityString, String minimalDoseQuantityString, String maximalDoseQuantityString, 
+			LocalTime time,
+			BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity,
+			String doseQuantityString, String minimalDoseQuantityString, String maximalDoseQuantityString,
 			boolean isAccordingToNeed) {
 		super(doseQuantity, minimalDoseQuantity, maximalDoseQuantity, isAccordingToNeed);
 		this.time = time;
 	}
 
+	public TimedDoseWrapper(BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity, boolean isAccordingToNeed) {
+		super(doseQuantity, minimalDoseQuantity, maximalDoseQuantity, isAccordingToNeed);
+	}
+
 	public static TimedDoseWrapper makeDose(LocalTime time, BigDecimal quantity, boolean isAccordingToNeed) {
-		if(isZero(quantity))
+		if (isZero(quantity))
 			return null;
 		return new TimedDoseWrapper(time, quantity, null, null, null, null, null, isAccordingToNeed);
 	}
 
 	public static TimedDoseWrapper makeDose(LocalTime time, BigDecimal quantity, String supplText, boolean isAccordingToNeed) {
-		if(isZero(quantity))
+		if (isZero(quantity))
 			return null;
 		return new TimedDoseWrapper(time, quantity, null, null, supplText, null, null, isAccordingToNeed);
 	}

@@ -27,20 +27,24 @@ import java.math.BigDecimal;
 public class PlainDoseWrapper extends DoseWrapper {
 
 	private PlainDoseWrapper(
-			BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity, 
-			String doseQuantityString, String minimalDoseQuantityString, String maximalDoseQuantityString, 
+			BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity,
+			String doseQuantityString, String minimalDoseQuantityString, String maximalDoseQuantityString,
 			boolean isAccordingToNeed) {
 		super(doseQuantity, minimalDoseQuantity, maximalDoseQuantity, isAccordingToNeed);
 	}
 
+	public PlainDoseWrapper(BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity, boolean isAccordingToNeed) {
+		super(doseQuantity, minimalDoseQuantity, maximalDoseQuantity, isAccordingToNeed);
+	}
+
 	public static PlainDoseWrapper makeDose(BigDecimal quantity) {
-		if(isZero(quantity))
+		if (isZero(quantity))
 			return null;
 		return new PlainDoseWrapper(quantity, null, null, null, null, null, false);
 	}
 
 	public static PlainDoseWrapper makeDose(BigDecimal quantity, boolean isAccordingToNeed) {
-		if(isZero(quantity))
+		if (isZero(quantity))
 			return null;
 		return new PlainDoseWrapper(quantity, null, null, null, null, null, isAccordingToNeed);
 	}

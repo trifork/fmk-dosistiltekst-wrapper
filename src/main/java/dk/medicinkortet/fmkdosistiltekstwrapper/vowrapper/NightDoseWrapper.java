@@ -27,19 +27,23 @@ import java.math.BigDecimal;
 public class NightDoseWrapper extends DoseWrapper {
 
 	private NightDoseWrapper(
-			BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity, 
+			BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity,
 			String doseQuantityString, String minimalDoseQuantityString, String maximalDoseQuantityString, boolean isAccordingToNeed) {
 		super(doseQuantity, minimalDoseQuantity, maximalDoseQuantity, isAccordingToNeed);
 	}
 
+	public NightDoseWrapper(BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity, boolean isAccordingToNeed) {
+		super(doseQuantity, minimalDoseQuantity, maximalDoseQuantity, isAccordingToNeed);
+	}
+
 	public static NightDoseWrapper makeDose(BigDecimal quantity) {
-		if(isZero(quantity))
+		if (isZero(quantity))
 			return null;
 		return new NightDoseWrapper(quantity, null, null, null, null, null, false);
 	}
 
 	public static NightDoseWrapper makeDose(BigDecimal quantity, boolean isAccordingToNeed) {
-		if(isZero(quantity))
+		if (isZero(quantity))
 			return null;
 		return new NightDoseWrapper(quantity, null, null, null, null, null, isAccordingToNeed);
 	}

@@ -24,14 +24,17 @@ package dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper;
 
 
 public class AdministrationAccordingToSchemaWrapper {
-	
+
 	private DateOrDateTimeWrapper startDateOrDateTime;
 	private DateOrDateTimeWrapper endDateOrDateTime;
-	
+
+	public AdministrationAccordingToSchemaWrapper() {
+	}
+
 	public static AdministrationAccordingToSchemaWrapper makeAdministrationAccordingToSchema(DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime) {
 		return new AdministrationAccordingToSchemaWrapper(startDateOrDateTime, endDateOrDateTime);
 	}
-	
+
 	private AdministrationAccordingToSchemaWrapper(DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime) {
 		this.startDateOrDateTime = startDateOrDateTime;
 		this.endDateOrDateTime = endDateOrDateTime;

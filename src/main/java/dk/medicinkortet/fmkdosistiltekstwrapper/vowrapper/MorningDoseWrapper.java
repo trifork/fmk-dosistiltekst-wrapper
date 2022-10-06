@@ -25,22 +25,26 @@ package dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper;
 import java.math.BigDecimal;
 
 public class MorningDoseWrapper extends DoseWrapper {
-	
+
 	private MorningDoseWrapper(
-			BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity, 
-			String doseQuantityString, String minimalDoseQuantityString, String maximalDoseQuantityString, 
+			BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity,
+			String doseQuantityString, String minimalDoseQuantityString, String maximalDoseQuantityString,
 			boolean isAccordingToNeed) {
 		super(doseQuantity, minimalDoseQuantity, maximalDoseQuantity, isAccordingToNeed);
 	}
 
+	public MorningDoseWrapper(BigDecimal doseQuantity, BigDecimal minimalDoseQuantity, BigDecimal maximalDoseQuantity, boolean isAccordingToNeed) {
+		super(doseQuantity, minimalDoseQuantity, maximalDoseQuantity, isAccordingToNeed);
+	}
+
 	public static MorningDoseWrapper makeDose(BigDecimal quantity) {
-		if(isZero(quantity))
+		if (isZero(quantity))
 			return null;
 		return new MorningDoseWrapper(quantity, null, null, null, null, null, false);
 	}
 
 	public static MorningDoseWrapper makeDose(BigDecimal quantity, boolean isAccordingToNeed) {
-		if(isZero(quantity))
+		if (isZero(quantity))
 			return null;
 		return new MorningDoseWrapper(quantity, null, null, null, null, null, isAccordingToNeed);
 	}

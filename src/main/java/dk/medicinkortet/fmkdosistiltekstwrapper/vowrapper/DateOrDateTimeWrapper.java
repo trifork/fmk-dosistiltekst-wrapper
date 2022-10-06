@@ -29,12 +29,16 @@ import java.util.Date;
 public class DateOrDateTimeWrapper {
 
 	private Date date;
+
+	public DateOrDateTimeWrapper() {
+	}
+
 	private Date dateTime;
-	
+
 	public static DateOrDateTimeWrapper makeDate(Date date) {
 		return new DateOrDateTimeWrapper(date, null);
 	}
-	
+
 	public static DateOrDateTimeWrapper makeDate(String date) {
 		try {
 			return new DateOrDateTimeWrapper(new SimpleDateFormat("yyyy-MM-dd").parse(date), null);

@@ -32,6 +32,9 @@ public class Interval<T extends Number> {
 		this.maximumValue = maximumValue;
 	}
 
+	public Interval() {
+	}
+
 	public T getMinimum() {
 		return minimumValue;
 	}
@@ -39,7 +42,7 @@ public class Interval<T extends Number> {
 	public T getMaximum() {
 		return maximumValue;
 	}
-		
+
 	public String toString() {
 		return "["+minimumValue+","+maximumValue+"]";
 	}

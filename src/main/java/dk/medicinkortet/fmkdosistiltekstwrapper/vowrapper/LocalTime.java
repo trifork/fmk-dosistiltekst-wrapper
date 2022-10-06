@@ -45,6 +45,9 @@ public class LocalTime {
         }
     }
 
+    public LocalTime() {
+    }
+
     public void setHour(int hour) {
         this.hour = hour;
     }

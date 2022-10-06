@@ -35,7 +35,10 @@ public class DosageWrapper {
 	private AdministrationAccordingToSchemaWrapper administrationAccordingToSchema;
 	private FreeTextWrapper freeText;
 	private StructuresWrapper structures;
-		
+
+	public DosageWrapper() {
+	}
+
 	public static DosageWrapper makeDosage(StructuresWrapper structures) {
 		return new DosageWrapper(null, null, structures);
 	}

@@ -23,15 +23,18 @@
 package dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper;
 
 public class FreeTextWrapper {
-	
+
 	private DateOrDateTimeWrapper startDateOrDateTime;
 	private DateOrDateTimeWrapper endDateOrDateTime;
 	private String text;
-	
+
+	public FreeTextWrapper() {
+	}
+
 	public static FreeTextWrapper makeFreeText(DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, String text) {
 		return new FreeTextWrapper(startDateOrDateTime, endDateOrDateTime, text);
 	}
-	
+
 	private FreeTextWrapper(DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, String text) {
 		this.startDateOrDateTime = startDateOrDateTime;
 		this.endDateOrDateTime = endDateOrDateTime;

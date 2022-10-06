@@ -28,16 +28,19 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 
 public class StructureWrapper {
-	
+
 	// Mapped values
 	private int iterationInterval;
-	private String supplText;	
+	private String supplText;
 	private DateOrDateTimeWrapper startDateOrDateTime;
 	private DateOrDateTimeWrapper endDateOrDateTime;
 	private ArrayList<DayWrapper> days;
 	private Object refToSource;
 	private String dosagePeriodPostfix;
-	
+
+	public StructureWrapper() {
+	}
+
 	/**
 	 * Factory metod to create structured dosages
 	 */

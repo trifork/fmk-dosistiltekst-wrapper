@@ -26,21 +26,24 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class StructuresWrapper {
-	
+
 	private UnitOrUnitsWrapper unitOrUnits;
 	private Collection<StructureWrapper> structures;
 	private DateOrDateTimeWrapper startDateOrDateTime;
 	private DateOrDateTimeWrapper endDateOrDateTime;
-	
+
+	public StructuresWrapper() {
+	}
+
 	public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, StructureWrapper... structures) {
 		return new StructuresWrapper(unitOrUnits, Arrays.asList(structures), null, null);
 	}
 
-    public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, Collection<StructureWrapper> structures) {
+	public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, Collection<StructureWrapper> structures) {
 		return new StructuresWrapper(unitOrUnits, structures, null, null);
-    }
-    
-    public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, StructureWrapper... structures) {
+	}
+
+	public static StructuresWrapper makeStructures(UnitOrUnitsWrapper unitOrUnits, DateOrDateTimeWrapper startDateOrDateTime, DateOrDateTimeWrapper endDateOrDateTime, StructureWrapper... structures) {
 		return new StructuresWrapper(unitOrUnits, Arrays.asList(structures), startDateOrDateTime, endDateOrDateTime);
 	}
 
