@@ -24,27 +24,27 @@ package dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper;
 
 public class Interval<T extends Number> {
 
-	private T minimumValue;
-	private T maximumValue;
+	private T minimum;
+	private T maximum;
 
-	public Interval(T minimumValue, T maximumValue) {
-		this.minimumValue = minimumValue;
-		this.maximumValue = maximumValue;
+	public Interval(T minimum, T maximum) {
+		this.minimum = minimum;
+		this.maximum = maximum;
 	}
 
 	public Interval() {
 	}
 
 	public T getMinimum() {
-		return minimumValue;
+		return minimum;
 	}
 
 	public T getMaximum() {
-		return maximumValue;
+		return maximum;
 	}
 
 	public String toString() {
-		return "["+minimumValue+","+maximumValue+"]";
+		return "[" + minimum + "," + maximum + "]";
 	}
 	
 }
