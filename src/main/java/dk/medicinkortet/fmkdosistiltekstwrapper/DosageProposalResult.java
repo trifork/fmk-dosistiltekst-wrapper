@@ -1,10 +1,13 @@
 package dk.medicinkortet.fmkdosistiltekstwrapper;
 
 public class DosageProposalResult {
-	private final String xmlSnippet;
-	private final String shortText;
-	private final String longText;
-	
+	private String xmlSnippet;
+	private String shortText;
+	private String longText;
+
+	public DosageProposalResult() {
+	}
+
 	public DosageProposalResult(String xmlSnippet, String shortText, String longText) {
 		this.xmlSnippet = xmlSnippet;
 		this.shortText = shortText;
