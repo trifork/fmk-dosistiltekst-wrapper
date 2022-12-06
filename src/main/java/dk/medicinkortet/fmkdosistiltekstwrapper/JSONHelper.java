@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dk.medicinkortet.fmkdosistiltekstwrapper.vowrapper.*;
 
 import java.io.IOException;
@@ -122,6 +123,7 @@ public class JSONHelper {
 			module.addSerializer(DateOrDateTimeWrapper.class, new JSONHelper.DateOrDateTimeWrapperSerializer());
 			module.addSerializer(DoseWrapper.class, new JSONHelper.DoseWrapperSerializer());
 			mapper.registerModule(module);
+			mapper.registerModule(new JavaTimeModule());
 			mapper.setSerializationInclusion(Include.NON_NULL);
 		}
 		
