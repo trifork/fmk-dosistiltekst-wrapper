@@ -114,7 +114,33 @@ public class JSONHelper {
 			jgen.writeEndObject();
 		}
 	}
-	
+
+	public static class DayWrapperSerializer extends StdSerializer<DayWrapper> {
+
+
+		public DayWrapperSerializer() {
+			this(null);
+		}
+
+		public DayWrapperSerializer(Class<DayWrapper> t) {
+			super(t);
+		}
+
+		@Override
+		public void serialize(DayWrapper day, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+
+			jgen.writeStartObject();
+
+			jgen.writeObjectField("dayNumber", day.getDayNumber());
+
+			if(day.getAllDoses() != null) {
+				jgen.writeObjectField("allDoses", day.getAllDoses());
+			}
+
+			jgen.writeEndObject();
+		}
+	}
+
 	private static ObjectMapper getObjectMapper() {
 		if(mapper == null) {
 			mapper = new ObjectMapper();
@@ -122,6 +148,7 @@ public class JSONHelper {
 			SimpleModule module = new SimpleModule();
 			module.addSerializer(DateOrDateTimeWrapper.class, new JSONHelper.DateOrDateTimeWrapperSerializer());
 			module.addSerializer(DoseWrapper.class, new JSONHelper.DoseWrapperSerializer());
+			module.addSerializer(DayWrapper.class, new JSONHelper.DayWrapperSerializer());
 			mapper.registerModule(module);
 			mapper.registerModule(new JavaTimeModule());
 			mapper.setSerializationInclusion(Include.NON_NULL);
